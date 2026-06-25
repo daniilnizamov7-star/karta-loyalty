@@ -27,6 +27,9 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 /* ЦЕНТРИРОВАНИЕ — всё в max 480px */
 .wrap{max-width:var(--max);margin:0 auto;padding:0 16px}
 
+/* Главный контейнер — ограничивает ВСЁ содержимое */
+.app-wrap{max-width:var(--max);margin:0 auto}
+
 /* LOADER */
 .loader{position:fixed;inset:0;z-index:9999;background:var(--bg);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
@@ -109,7 +112,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
   font-size:0.78rem;font-weight:700;cursor:pointer;text-decoration:underline}
 
 /* ── HERO CARD ── */
-.card-wrap{padding:16px 16px 0}
+.card-wrap{padding:16px 16px 0;max-width:var(--max);margin:0 auto}
 .hero-card{
   background:linear-gradient(145deg,#1a0e4a,#0c1242,#1e0a32);
   border:1px solid rgba(155,89,255,0.2);border-radius:24px;
@@ -165,7 +168,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 .hc-vis-lbl{font-size:0.62rem;color:rgba(255,255,255,0.3)}
 
 /* ── ONBOARDING BANNER (только для новых) ── */
-.ob-banner{margin:14px 16px 0;
+.ob-banner{margin:14px auto 0;max-width:var(--max);width:calc(100% - 32px);
   background:linear-gradient(135deg,rgba(255,60,172,0.1),rgba(45,156,255,0.07));
   border:1px solid rgba(255,60,172,0.2);border-radius:16px;
   padding:14px 16px;display:flex;align-items:center;gap:12px;
@@ -183,7 +186,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
   -webkit-tap-highlight-color:transparent}
 
 /* ── QUICK ACTIONS ── */
-.qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px}
+.qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;max-width:var(--max);margin:0 auto}
 .qa{background:var(--card);border:1px solid var(--bd);border-radius:16px;
   padding:14px 6px;display:flex;flex-direction:column;align-items:center;gap:6px;
   cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--white);
@@ -197,7 +200,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 .qa-lbl{font-size:0.58rem;font-weight:800;color:var(--muted2);text-align:center;line-height:1.2}
 
 /* ── ANNOUNCEMENTS ── */
-.ann-section{padding:0 16px 12px}
+.ann-section{padding:0 16px 12px;max-width:var(--max);margin:0 auto}
 .ann-head{display:flex;align-items:center;gap:6px;margin-bottom:10px}
 .ann-head-lbl{font-size:0.68rem;font-weight:800;letter-spacing:0.08em;
   text-transform:uppercase;color:var(--muted)}
@@ -213,14 +216,14 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 
 /* ── TABS ── */
 .tab-btns{display:grid;grid-template-columns:repeat(3,1fr);
-  margin:0 16px 12px;background:var(--card);
+  margin:0 auto 12px;max-width:var(--max);padding:0 16px;background:var(--card);
   border:1px solid var(--bd);border-radius:16px;overflow:hidden;padding:3px;gap:3px}
 .tb{padding:10px 4px;text-align:center;font-size:0.68rem;font-weight:800;
   color:var(--muted2);cursor:pointer;transition:all 0.22s;
   border:none;background:none;border-radius:12px;
   -webkit-tap-highlight-color:transparent}
 .tb.active{background:rgba(255,60,172,0.12);color:var(--neon)}
-.tab-panel{display:none;padding:0 16px 12px}
+.tab-panel{display:none;padding:0 16px 12px;max-width:var(--max);margin:0 auto}
 .tab-panel.active{display:block}
 
 /* ── LEVELS ── */
