@@ -199,6 +199,9 @@ textarea.ann-inp{resize:vertical;min-height:70px;font-family:inherit}
       <div class="demo-hint-row"><span class="dhr-role">🟣 Менеджер</span><span class="dhr-pass" onclick="fillPass('2222')">2222</span></div>
       <div class="demo-hint-row"><span class="dhr-role">🔴 Директор</span><span class="dhr-pass" onclick="fillPass('3333')">3333</span></div>
     </div>
+    <div style="margin-top:12px;text-align:center">
+      <button onclick="resetPasswords()" style="background:none;border:none;color:#5a6a90;font-size:0.72rem;cursor:pointer;text-decoration:underline">Сбросить пароли до стандартных</button>
+    </div>
   </div>
 </div>
 
@@ -446,6 +449,18 @@ function getAnnouncements(){ return get(ANN_KEY)||[]; }
 
 function broadcast(type, data){
   if(BC) BC.postMessage({type,...data});
+}
+
+// ── RESET PASSWORDS ──────────────────────────────────────────────────────────
+function resetPasswords(){
+  localStorage.removeItem('sp_passwords');
+  document.getElementById('lerr').textContent='';
+  document.getElementById('passInp').value='';
+  // показываем подтверждение
+  const lerr = document.getElementById('lerr');
+  lerr.textContent = '✅ Пароли сброшены: 1111 / 2222 / 3333';
+  lerr.style.color = '#06d6a0';
+  setTimeout(()=>{ lerr.textContent=''; lerr.style.color=''; }, 3000);
 }
 
 // ── DEFAULT DATA ──────────────────────────────────────────────────────────────
