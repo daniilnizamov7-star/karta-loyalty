@@ -7,7 +7,6 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#04050e">
 <title>⭐ StarPass · Карта гостя</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
   --bg:#04050e;--card:#0e1028;--card2:#131535;
@@ -20,49 +19,47 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;-webkit-text-size-adjust:100%}
-body{font-family:var(--fb);background:var(--bg);color:var(--white);
-  overflow-x:hidden;padding-bottom:88px}
+body{font-family:var(--fb);background:var(--bg);color:var(--white);overflow-x:hidden;padding-bottom:88px}
 
-/* LOADER */
 .loader{position:fixed;inset:0;z-index:9999;background:var(--bg);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  transition:opacity 0.3s;pointer-events:none}
 .loader-ico{font-size:3.5rem;animation:fl 1.2s ease-in-out infinite alternate}
 @keyframes fl{from{transform:translateY(0)}to{transform:translateY(-12px)}}
 .loader-t{font-size:0.82rem;color:var(--muted2);font-weight:700;letter-spacing:0.06em}
 
-/* TOAST */
 .toast{position:fixed;top:70px;left:50%;transform:translateX(-50%) translateY(-10px);
   background:var(--card2);border:1px solid var(--b2);border-radius:100px;
   padding:11px 22px;font-size:0.85rem;font-weight:700;
-  opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:600;
+  opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:700;
   box-shadow:0 8px 24px rgba(0,0,0,0.5)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* HEADER */
 .hdr{position:sticky;top:0;z-index:100;
   background:rgba(4,5,14,0.92);backdrop-filter:blur(16px);
   border-bottom:1px solid var(--border);
   padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
 .hdr-logo{font-family:var(--fh);font-size:1rem;font-weight:900;
   background:linear-gradient(135deg,var(--neon),var(--blue));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  display:flex;align-items:center;gap:6px;text-decoration:none}
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-back{display:flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:700;
+  color:var(--muted2);text-decoration:none;padding:6px 14px;
+  background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:100px;
+  -webkit-tap-highlight-color:transparent}
 .hdr-btn{width:36px;height:36px;border-radius:50%;
   background:rgba(255,255,255,0.06);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer}
+  display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
 
-/* REGISTER */
 .reg-screen{padding:20px;display:none}
 .reg-screen.active{display:block}
-.reg-card{background:var(--card);border:1px solid var(--border);
-  border-radius:24px;padding:32px 22px;text-align:center}
+.reg-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:32px 22px;text-align:center}
 .reg-icon{font-size:3rem;display:block;margin-bottom:16px;animation:fl 2s ease-in-out infinite alternate}
 .reg-title{font-family:var(--fh);font-size:1.25rem;font-weight:900;margin-bottom:8px}
 .reg-sub{font-size:0.86rem;color:var(--muted2);line-height:1.6;margin-bottom:24px}
 .reg-perks{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;text-align:left}
-.reg-perk{display:flex;align-items:center;gap:12px;
-  background:rgba(255,255,255,0.03);border:1px solid var(--border);
-  border-radius:12px;padding:11px 14px;font-size:0.83rem;color:var(--muted2)}
+.reg-perk{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);border-radius:12px;padding:11px 14px;font-size:0.83rem;color:var(--muted2)}
 .f-group{display:flex;flex-direction:column;gap:6px;margin-bottom:12px;text-align:left}
 .f-label{font-size:0.7rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
 .f-input{background:rgba(255,255,255,0.04);border:1px solid var(--border);
@@ -74,16 +71,13 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 .btn-main{width:100%;padding:15px;border:none;border-radius:100px;
   background:linear-gradient(135deg,var(--neon),#c4007a);color:#fff;
   font-family:var(--fh);font-size:0.9rem;font-weight:700;
-  cursor:pointer;transition:all 0.3s;margin-top:6px;
-  box-shadow:0 0 28px rgba(255,60,172,0.25)}
+  cursor:pointer;transition:all 0.3s;margin-top:6px;box-shadow:0 0 28px rgba(255,60,172,0.25);
+  -webkit-tap-highlight-color:transparent}
 .btn-main:active{transform:scale(0.97)}
-.btn-main:disabled{opacity:0.6;pointer-events:none}
 
-/* MAIN */
 .main-screen{display:none}
 .main-screen.active{display:block}
 
-/* HERO CARD */
 .card-wrap{padding:16px 20px 0}
 .hero-card{background:linear-gradient(145deg,#18104a,#0c1540,#1e0a2a);
   border:1px solid rgba(155,89,255,0.22);border-radius:24px;padding:24px;
@@ -108,90 +102,77 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 .hc-visits{text-align:right;font-size:0.68rem;color:var(--muted)}
 .hc-visits strong{display:block;font-family:var(--fh);font-size:1.1rem;font-weight:900;color:var(--white)}
 
-/* QUICK ACTIONS */
 .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 20px}
 .qa{background:var(--card);border:1px solid var(--border);border-radius:14px;
   padding:12px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;
-  cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--white)}
+  cursor:pointer;transition:all 0.2s;text-decoration:none;color:var(--white);
+  -webkit-tap-highlight-color:transparent}
 .qa:active{transform:scale(0.94)}
 .qa-icon{font-size:1.35rem}
 .qa-lbl{font-size:0.6rem;font-weight:800;color:var(--muted2);text-align:center;line-height:1.2}
 
-/* ANNOUNCEMENTS */
 .ann-section{padding:0 20px 14px}
 .ann-title-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .ann-title-lbl{font-size:0.7rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:var(--muted)}
 .ann-card{background:linear-gradient(135deg,rgba(255,60,172,0.07),rgba(45,156,255,0.05));
-  border:1px solid rgba(255,60,172,0.14);border-radius:16px;padding:16px;
-  margin-bottom:10px;cursor:pointer;transition:all 0.25s}
+  border:1px solid rgba(255,60,172,0.14);border-radius:16px;padding:16px;margin-bottom:10px;transition:all 0.25s}
 .ann-card:active{transform:scale(0.98)}
 .ann-card-title{font-family:var(--fh);font-size:0.86rem;font-weight:700;margin-bottom:5px}
 .ann-card-text{font-size:0.78rem;color:var(--muted2);line-height:1.5}
 .ann-card-btn{display:inline-block;margin-top:10px;padding:7px 16px;border-radius:100px;
   background:rgba(255,60,172,0.15);border:1px solid rgba(255,60,172,0.3);
-  color:var(--neon);font-size:0.75rem;font-weight:700}
+  color:var(--neon);font-size:0.75rem;font-weight:700;text-decoration:none}
 
-/* TABS */
 .tab-btns{display:grid;grid-template-columns:repeat(3,1fr);
-  margin:0 20px 12px;background:var(--card);border:1px solid var(--border);
-  border-radius:14px;overflow:hidden}
+  margin:0 20px 12px;background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden}
 .tb{padding:10px 4px;text-align:center;font-size:0.68rem;font-weight:800;
-  color:var(--muted2);cursor:pointer;transition:all 0.2s;border:none;background:none;color:var(--muted2)}
+  color:var(--muted2);cursor:pointer;transition:all 0.2s;border:none;background:none;
+  -webkit-tap-highlight-color:transparent}
 .tb.active{background:rgba(255,60,172,0.1);color:var(--neon)}
 .tab-panel{display:none;padding:0 20px 12px}
 .tab-panel.active{display:block}
 
-/* LEVELS */
 .lvl-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.lv{background:var(--card);border:1px solid var(--border);
-  border-radius:14px;padding:12px 6px;text-align:center;transition:all 0.25s}
+.lv{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 6px;text-align:center;transition:all 0.25s}
 .lv.current{border-color:rgba(255,60,172,0.4);background:rgba(255,60,172,0.06)}
 .lv-icon{font-size:1.4rem;display:block;margin-bottom:5px}
 .lv-name{font-family:var(--fh);font-size:0.56rem;font-weight:700;line-height:1.2;margin-bottom:2px}
 .lv-pts{font-size:0.56rem;color:var(--muted)}
 
-/* PERKS */
 .perks{display:flex;flex-direction:column;gap:9px}
-.perk{background:var(--card);border:1px solid var(--border);
-  border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px}
+.perk{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:13px;display:flex;align-items:center;gap:11px}
 .perk.locked{opacity:0.38}
 .pk-icon{font-size:1.4rem;flex-shrink:0}
 .pk-name{font-weight:800;font-size:0.83rem;margin-bottom:2px}
 .pk-desc{font-size:0.74rem;color:var(--muted2);line-height:1.4}
-.pk-badge{font-size:0.66rem;font-weight:800;padding:4px 10px;border-radius:100px;
-  border:1px solid;white-space:nowrap;flex-shrink:0;margin-left:auto}
+.pk-badge{font-size:0.66rem;font-weight:800;padding:4px 10px;border-radius:100px;border:1px solid;white-space:nowrap;flex-shrink:0;margin-left:auto}
 
-/* HISTORY */
 .hist{display:flex;flex-direction:column;gap:8px}
-.hi{background:var(--card);border:1px solid var(--border);
-  border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:10px}
-.hi-ico{width:34px;height:34px;border-radius:50%;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:0.95rem}
-.hi-ico.p{background:rgba(6,214,160,0.12)}
-.hi-ico.m{background:rgba(255,60,172,0.1)}
+.hi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:10px}
+.hi-ico{width:34px;height:34px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.95rem}
+.hi-ico.p{background:rgba(6,214,160,0.12)} .hi-ico.m{background:rgba(255,60,172,0.1)}
 .hi-info{flex:1}
 .hi-action{font-weight:700;font-size:0.82rem}
 .hi-date{font-size:0.7rem;color:var(--muted);margin-top:1px}
 .hi-pts{font-family:var(--fh);font-size:0.86rem;font-weight:700;flex-shrink:0}
 .hi-pts.p{color:var(--green)} .hi-pts.m{color:var(--neon)}
 
-/* BOTTOM NAV */
 .bnav{position:fixed;bottom:0;left:0;right:0;z-index:200;
   background:rgba(7,8,26,0.96);backdrop-filter:blur(20px);
   border-top:1px solid var(--border);
   display:flex;justify-content:space-around;padding:10px 0 16px}
 .bn{display:flex;flex-direction:column;align-items:center;gap:3px;
   font-size:0.6rem;font-weight:800;color:var(--muted);
-  cursor:pointer;padding:4px 14px;transition:all 0.2s;text-decoration:none;color:var(--muted)}
+  cursor:pointer;padding:4px 14px;transition:all 0.2s;text-decoration:none;
+  -webkit-tap-highlight-color:transparent}
 .bn.active{color:var(--neon)}
 .bn-icon{font-size:1.2rem}
 
-/* MODAL */
+/* MODAL: display:none когда неактивна — не перехватывает клики */
 .mo{position:fixed;inset:0;z-index:400;
   background:rgba(4,5,14,0.88);backdrop-filter:blur(12px);
-  display:flex;align-items:flex-end;padding:20px;
-  opacity:0;pointer-events:none;transition:opacity 0.3s}
-.mo.active{opacity:1;pointer-events:all}
+  display:none;align-items:flex-end;padding:20px}
+.mo.active{display:flex}
 .mo-sheet{background:var(--card2);border:1px solid var(--border);
   border-radius:22px 22px 18px 18px;padding:26px 20px;
   width:100%;max-width:460px;margin:0 auto;
@@ -202,26 +183,28 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 .mo-body{font-size:0.83rem;color:var(--muted2);line-height:1.6;margin-bottom:18px}
 .mo-btn{width:100%;padding:14px;border:none;border-radius:100px;
   background:linear-gradient(135deg,var(--neon),#c4007a);color:#fff;
-  font-family:var(--fh);font-size:0.85rem;font-weight:700;
-  cursor:pointer;transition:all 0.2s;margin-bottom:9px}
+  font-family:var(--fh);font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.2s;margin-bottom:9px;
+  -webkit-tap-highlight-color:transparent}
 .mo-cancel{width:100%;padding:11px;border:1px solid var(--border);
   border-radius:100px;background:transparent;color:var(--muted2);
-  font-family:var(--fh);font-size:0.8rem;font-weight:700;cursor:pointer}
+  font-family:var(--fh);font-size:0.8rem;font-weight:700;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
 
-/* KID ROW */
 .kid-row{display:flex;align-items:center;justify-content:space-between;
   background:rgba(255,255,255,0.03);border:1px solid var(--border);
   border-radius:12px;padding:11px 14px;margin-bottom:8px}
 .kid-name{font-weight:700;font-size:0.85rem}
 .kid-bday{font-size:0.76rem;color:var(--muted2);margin-top:2px}
 .kid-del{background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.2);
-  color:var(--red);border-radius:100px;padding:4px 10px;font-size:0.72rem;font-weight:700;cursor:pointer}
+  color:var(--red);border-radius:100px;padding:4px 10px;font-size:0.72rem;font-weight:700;cursor:pointer;
+  -webkit-tap-highlight-color:transparent}
 
-/* CONFETTI */
-@keyframes cf{0%{transform:translate(-50%,-50%) scale(0.2) rotate(0deg);opacity:1}
+@keyframes cf{
+  0%{transform:translate(-50%,-50%) scale(0.2) rotate(0deg);opacity:1}
   100%{transform:translate(calc(-50% + var(--dx)),calc(-50% - 200px)) scale(1) rotate(var(--r));opacity:0}}
-.cf{position:fixed;pointer-events:none;z-index:999;font-size:1.2rem;
-  animation:cf 0.9s ease forwards}
+.cf{position:fixed;pointer-events:none;z-index:999;font-size:1.2rem;animation:cf 0.9s ease forwards}
+
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
 </style>
 </head>
 <body>
@@ -234,13 +217,13 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
 
 <header class="hdr">
   <div style="display:flex;align-items:center;gap:10px">
-    <a href="index.html" class="hdr-btn" title="На главную" style="text-decoration:none;font-size:0.8rem;font-weight:700;color:var(--muted2);width:auto;padding:0 12px;border-radius:100px;gap:4px;display:flex;align-items:center">← Назад</a>
+    <a href="index.html" class="hdr-back">← Назад</a>
     <div class="hdr-logo">⭐ STARPASS</div>
   </div>
-  <div class="hdr-btn" id="kidsBtn" onclick="om('kidsMo')" title="Дети и дни рождения">🎂</div>
+  <div class="hdr-btn" onclick="om('kidsMo')" title="Дети и дни рождения">🎂</div>
 </header>
 
-<!-- REGISTER SCREEN -->
+<!-- REGISTER -->
 <div class="reg-screen" id="regScreen">
   <div class="reg-card">
     <span class="reg-icon">⭐</span>
@@ -267,7 +250,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
     <div style="font-size:0.72rem;color:var(--muted2);text-align:center;margin-bottom:12px;line-height:1.5">
       Нажимая кнопку, вы соглашаетесь на обработку персональных данных
     </div>
-    <button class="btn-main" id="regBtn" onclick="doReg()">⭐ Вступить бесплатно</button>
+    <button class="btn-main" onclick="doReg()">⭐ Вступить бесплатно</button>
     <div style="margin-top:16px;text-align:center">
       <span style="font-size:0.78rem;color:var(--muted2)">Демо: </span>
       <button onclick="loadDemo()" style="background:none;border:none;color:var(--blue);font-size:0.78rem;font-weight:700;cursor:pointer;text-decoration:underline">Загрузить пример данных →</button>
@@ -275,7 +258,7 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
   </div>
 </div>
 
-<!-- MAIN SCREEN -->
+<!-- MAIN -->
 <div class="main-screen" id="mainScreen">
   <div class="card-wrap">
     <div class="hero-card">
@@ -306,7 +289,6 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
     <a class="qa" href="index.html"><span class="qa-icon">🏠</span><span class="qa-lbl">О парке</span></a>
   </div>
 
-  <!-- ANNOUNCEMENTS -->
   <div class="ann-section" id="annSection" style="display:none">
     <div class="ann-title-row">
       <span style="font-size:1rem">📢</span>
@@ -324,11 +306,9 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
   <div class="tab-panel active" id="tp-levels">
     <div class="lvl-grid" id="lvlGrid"></div>
   </div>
-
   <div class="tab-panel" id="tp-perks">
     <div class="perks" id="perksList"></div>
   </div>
-
   <div class="tab-panel" id="tp-history">
     <div class="hist" id="histList">
       <div style="text-align:center;color:var(--muted);padding:32px;font-size:0.85rem">История пуста</div>
@@ -380,8 +360,9 @@ body{font-family:var(--fb);background:var(--bg);color:var(--white);
   </div>
 </div>
 
+<!-- QR library в конце body — не блокирует рендер -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// ── DATA ──────────────────────────────────────────────────────────────────────
 const STORE_KEY = 'sp_guest';
 const BC = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('demo_sync') : null;
 
@@ -393,15 +374,17 @@ const LEVELS = [
 ];
 
 const PERKS = [
-  {icon:'⭐', name:'100★ за визит', desc:'Начисляется при каждом посещении парка', lvl:1},
-  {icon:'🎂', name:'×3★ в день рождения', desc:'Тройные звёзды и подарок в ДР ребёнка', lvl:1},
-  {icon:'🎟️', name:'Бесплатный визит', desc:'Обмен 1000★ на посещение', lvl:1},
-  {icon:'🚀', name:'+5% к начислениям', desc:'Бонусный коэффициент для уровня Космонавт', lvl:2},
-  {icon:'⚡', name:'Приоритетная запись', desc:'Первым в очередь на праздник или аттракцион', lvl:3},
-  {icon:'👑', name:'Скидка 15%', desc:'На все услуги парка на уровне Галактика', lvl:4},
-  {icon:'🎁', name:'Эксклюзивный подарок', desc:'Персональный подарок от директора', lvl:4},
+  {icon:'⭐', name:'100★ за визит',        desc:'Начисляется при каждом посещении парка',       lvl:1},
+  {icon:'🎂', name:'×3★ в день рождения', desc:'Тройные звёзды и подарок в ДР ребёнка',        lvl:1},
+  {icon:'🎟️', name:'Бесплатный визит',    desc:'Обмен 1000★ на посещение',                     lvl:1},
+  {icon:'🚀', name:'+5% к начислениям',   desc:'Бонусный коэффициент для уровня Космонавт',    lvl:2},
+  {icon:'⚡', name:'Приоритетная запись', desc:'Первым в очередь на праздник или аттракцион',  lvl:3},
+  {icon:'👑', name:'Скидка 15%',          desc:'На все услуги парка на уровне Галактика',       lvl:4},
+  {icon:'🎁', name:'Эксклюзивный подарок',desc:'Персональный подарок от директора',             lvl:4},
 ];
 
+// Демо-данные: баланс считается честно по истории
+// 100+100+300+100+100 = 700, минус 350 = 350 ✅
 const DEMO_DATA = {
   name: 'Иванов Иван',
   phone: '+7 (900) 123-45-67',
@@ -413,64 +396,75 @@ const DEMO_DATA = {
     {name:'Коля', bday:'2022-07-05'},
   ],
   history: [
-    {type:'p', action:'Визит в парк', pts:100, date:'2026-06-20', staff:'Ольга'},
-    {type:'p', action:'Визит в парк', pts:100, date:'2026-06-10', staff:'Ольга'},
-    {type:'p', action:'Бонус в день рождения × Маша 🎂', pts:300, date:'2026-03-12', staff:'Менеджер'},
-    {type:'p', action:'Визит в парк', pts:100, date:'2026-02-14', staff:'Анна'},
-    {type:'m', action:'Обмен на бесплатный визит 🎟️', pts:-350, date:'2026-01-05', staff:'Администратор'},
-    {type:'p', action:'Визит в парк', pts:100, date:'2025-12-20', staff:'Ольга'},
+    {type:'p', action:'Визит в парк',                    pts:100,  date:'2026-06-20', staff:'Ольга'},
+    {type:'p', action:'Визит в парк',                    pts:100,  date:'2026-06-10', staff:'Ольга'},
+    {type:'p', action:'Бонус в день рождения × Маша 🎂', pts:300,  date:'2026-03-12', staff:'Менеджер'},
+    {type:'p', action:'Визит в парк',                    pts:100,  date:'2026-02-14', staff:'Анна'},
+    {type:'m', action:'Обмен на бесплатный визит 🎟️',   pts:-350, date:'2026-01-05', staff:'Администратор'},
+    {type:'p', action:'Визит в парк',                    pts:100,  date:'2025-12-20', staff:'Ольга'},
   ]
 };
 
-function getGuest(){
-  try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'null'); }catch{return null;}
-}
-function saveGuest(g){
-  localStorage.setItem(STORE_KEY, JSON.stringify(g));
-  if(BC) BC.postMessage({type:'guest_update', guest:g});
-}
+function getGuest(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)||'null'); }catch{ return null; } }
+function saveGuest(g){ localStorage.setItem(STORE_KEY,JSON.stringify(g)); if(BC) BC.postMessage({type:'guest_update'}); }
+function getLevel(s){ return LEVELS.slice().reverse().find(l=>s>=l.min)||LEVELS[0]; }
 
-// ── LEVELS ────────────────────────────────────────────────────────────────────
-function getLevel(stars){
-  return LEVELS.slice().reverse().find(l=>stars>=l.min) || LEVELS[0];
-}
+let _firstRender = true;
 
-// ── RENDER ────────────────────────────────────────────────────────────────────
 function renderMain(){
   const g = getGuest();
   if(!g){ showReg(); return; }
   document.getElementById('regScreen').classList.remove('active');
   document.getElementById('mainScreen').classList.add('active');
 
-  const lv = getLevel(g.stars);
+  const lv   = getLevel(g.stars);
   const next = LEVELS.find(l=>l.min>g.stars);
 
-  document.getElementById('hcLv').textContent = lv.i+' '+lv.n;
-  document.getElementById('hcLv').style.cssText = `color:${lv.c};border-color:${lv.c}40`;
-  animCount('hcNum', g.stars);
-  document.getElementById('hcSub').textContent = next
-    ? `ещё ${next.min - g.stars}★ до уровня ${next.n}`
-    : 'Максимальный уровень достигнут! 🎉';
-  const pct = next ? Math.min(100,(g.stars-lv.min)/(next.min-lv.min)*100) : 100;
-  setTimeout(()=>{ document.getElementById('hcFill').style.width = pct+'%'; }, 300);
-  document.getElementById('hcFrom').textContent = lv.n;
-  document.getElementById('hcTo').textContent = next ? next.n+' '+next.min+'★' : '👑 Галактика';
-  document.getElementById('hcName').textContent = g.name;
-  document.getElementById('hcSince').textContent = 'С '+fmtDate(g.since);
-  animCount('hcVis', g.visits);
+  const hcLv = document.getElementById('hcLv');
+  hcLv.textContent   = lv.i+' '+lv.n;
+  hcLv.style.color       = lv.c;
+  hcLv.style.borderColor = lv.c+'40';
 
-  // QR
-  const qrEl = document.getElementById('qrCanvas');
-  qrEl.innerHTML = '';
-  try{
-    new QRCode(qrEl,{text:g.phone,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
-  }catch(e){}
-  document.getElementById('qrPhone').textContent = g.phone;
+  if(_firstRender){
+    animCount('hcNum', g.stars);
+    animCount('hcVis', g.visits);
+    _firstRender = false;
+  } else {
+    document.getElementById('hcNum').textContent = g.stars;
+    document.getElementById('hcVis').textContent = g.visits;
+  }
+
+  document.getElementById('hcSub').textContent = next
+    ? `ещё ${next.min-g.stars}★ до уровня ${next.n}`
+    : 'Максимальный уровень достигнут! 🎉';
+
+  const pct = next ? Math.min(100,(g.stars-lv.min)/(next.min-lv.min)*100) : 100;
+  requestAnimationFrame(()=>{ document.getElementById('hcFill').style.width=pct+'%'; });
+
+  document.getElementById('hcFrom').textContent  = lv.n;
+  document.getElementById('hcTo').textContent    = next ? next.n+' '+next.min+'★' : '👑 Галактика';
+  document.getElementById('hcName').textContent  = g.name;
+  document.getElementById('hcSince').textContent = 'С '+fmtDate(g.since);
 
   renderLevels(lv);
   renderPerks(lv);
   renderHistory(g.history||[]);
   renderAnnouncements();
+  renderQR(g);
+}
+
+function renderQR(g){
+  const qrEl = document.getElementById('qrCanvas');
+  // Перегенерируем при каждом открытии модалки, кешируем только если телефон не изменился
+  if(qrEl.dataset.phone === g.phone && qrEl.querySelector('canvas,img')) return;
+  qrEl.innerHTML = '';
+  qrEl.dataset.phone = g.phone;
+  document.getElementById('qrPhone').textContent = g.phone;
+  try{
+    new QRCode(qrEl,{text:g.phone,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});
+  }catch(e){
+    qrEl.innerHTML='<div style="font-size:0.8rem;color:#999;padding:20px">'+g.phone+'</div>';
+  }
 }
 
 function renderLevels(cur){
@@ -478,14 +472,14 @@ function renderLevels(cur){
     <div class="lv ${l.id===cur.id?'current':''}">
       <span class="lv-icon">${l.i}</span>
       <div class="lv-name" style="color:${l.c}">${l.n.toUpperCase()}</div>
-      <div class="lv-pts">${l.min===0?'0':''+l.min} ★</div>
+      <div class="lv-pts">${l.min||'0'} ★</div>
     </div>`).join('');
 }
 
 function renderPerks(cur){
   document.getElementById('perksList').innerHTML = PERKS.map(p=>{
-    const locked = p.lvl > cur.id;
-    const req = LEVELS.find(l=>l.id===p.lvl);
+    const locked = p.lvl>cur.id;
+    const req    = LEVELS.find(l=>l.id===p.lvl);
     return `<div class="perk${locked?' locked':''}">
       <span class="pk-icon">${p.icon}</span>
       <div style="flex:1">
@@ -500,36 +494,36 @@ function renderPerks(cur){
 }
 
 function renderHistory(hist){
-  if(!hist.length){
-    document.getElementById('histList').innerHTML='<div style="text-align:center;color:var(--muted);padding:32px;font-size:0.85rem">История пуста</div>';
-    return;
-  }
-  document.getElementById('histList').innerHTML = hist.map(h=>`
-    <div class="hi">
+  const el = document.getElementById('histList');
+  if(!hist.length){ el.innerHTML='<div style="text-align:center;color:var(--muted);padding:32px;font-size:0.85rem">История пуста</div>'; return; }
+  el.innerHTML = hist.map(h=>{
+    const ptsStr = h.pts===0 ? '' : `${h.pts>0?'+':''}${h.pts}★`;
+    return `<div class="hi">
       <div class="hi-ico ${h.type}">${h.type==='p'?'⭐':'🎟️'}</div>
       <div class="hi-info">
         <div class="hi-action">${h.action}</div>
         <div class="hi-date">${fmtDate(h.date)}${h.staff?' · '+h.staff:''}</div>
       </div>
-      <div class="hi-pts ${h.type}">${h.pts>0?'+':''} ${h.pts}★</div>
-    </div>`).join('');
+      <div class="hi-pts ${h.type}">${ptsStr}</div>
+    </div>`;
+  }).join('');
 }
 
 function renderAnnouncements(){
   const anns = JSON.parse(localStorage.getItem('sp_announcements')||'[]');
-  const now = Date.now();
+  const now  = Date.now();
   const active = anns.filter(a=>{
-    if(a.from && new Date(a.from).getTime()>now) return false;
+    if(a.from  && new Date(a.from).getTime()>now)  return false;
     if(a.until && new Date(a.until).getTime()<now) return false;
     return true;
   });
-  const sec = document.getElementById('annSection');
+  const sec  = document.getElementById('annSection');
   const list = document.getElementById('annList');
   if(!active.length){ sec.style.display='none'; return; }
   sec.style.display='block';
   list.innerHTML = active.map(a=>`
     <div class="ann-card" ${a.btnUrl?`onclick="window.open('${a.btnUrl}','_blank')"`:''}>
-      ${a.image?`<img src="${a.image}" style="width:100%;border-radius:10px;margin-bottom:10px;max-height:160px;object-fit:cover" onerror="this.style.display='none'">`:'' }
+      ${a.image?`<img src="${a.image}" loading="lazy" style="width:100%;border-radius:10px;margin-bottom:10px;max-height:160px;object-fit:cover" onerror="this.style.display='none'">`:'' }
       <div class="ann-card-title">${a.title}</div>
       <div class="ann-card-text">${a.text}</div>
       ${a.btnText?`<div class="ann-card-btn">${a.btnText} →</div>`:''}
@@ -541,20 +535,15 @@ function showReg(){
   document.getElementById('mainScreen').classList.remove('active');
 }
 
-// ── REGISTRATION ──────────────────────────────────────────────────────────────
 function doReg(){
-  const name = document.getElementById('rName').value.trim();
-  const phone = document.getElementById('rPhone').value.trim();
-  const bday = document.getElementById('rBday').value;
+  const name  = document.getElementById('rName').value.trim();
+  const phone = document.getElementById('rPhone').value.trim().replace(/\D/g,'');
   if(!name){ shake('rName'); return; }
-  if(!phone || phone.length<10){ shake('rPhone'); return; }
-  const g = {
-    name, phone, stars:0, visits:0,
-    since: new Date().toISOString().slice(0,10),
-    kids: bday ? [{name:'Ребёнок', bday}] : [],
-    history: [{type:'p',action:'Регистрация в StarPass ⭐',pts:0,date:new Date().toISOString().slice(0,10),staff:'Система'}]
-  };
+  if(phone.length<10){ shake('rPhone'); return; }
+  const g = {name, phone:document.getElementById('rPhone').value.trim(), stars:0, visits:0,
+    since:today(), kids:document.getElementById('rBday').value?[{name:'Ребёнок',bday:document.getElementById('rBday').value}]:[], history:[]};
   saveGuest(g);
+  _firstRender=true;
   renderMain();
   toast('🎉 Добро пожаловать в StarPass!');
   confetti();
@@ -562,31 +551,30 @@ function doReg(){
 
 function loadDemo(){
   saveGuest(DEMO_DATA);
+  _firstRender=true;
   renderMain();
   toast('✅ Демо-данные загружены');
 }
 
-// ── KIDS ──────────────────────────────────────────────────────────────────────
 function renderKids(){
-  const g = getGuest();
-  if(!g) return;
+  const g = getGuest(); if(!g) return;
   const kids = g.kids||[];
   document.getElementById('kidsList').innerHTML = kids.length
-    ? kids.map((k,i)=>`<div class="kid-row">
-        <div><div class="kid-name">${k.name}</div><div class="kid-bday">🎂 ${fmtDate(k.bday)}</div></div>
-        <button class="kid-del" onclick="delKid(${i})">Удалить</button>
-      </div>`).join('')
+    ? kids.map((k,i)=>`
+        <div class="kid-row">
+          <div><div class="kid-name">${k.name}</div><div class="kid-bday">🎂 ${fmtDate(k.bday)}</div></div>
+          <button class="kid-del" onclick="delKid(${i})">Удалить</button>
+        </div>`).join('')
     : '<div style="text-align:center;color:var(--muted);padding:16px;font-size:0.85rem">Детей не добавлено</div>';
 }
 
 function addKid(){
   const name = document.getElementById('kidName').value.trim();
   const bday = document.getElementById('kidBday').value;
-  if(!name || !bday){ toast('⚠️ Введите имя и дату рождения'); return; }
-  const g = getGuest();
-  if(!g) return;
+  if(!name||!bday){ toast('⚠️ Введите имя и дату рождения'); return; }
+  const g = getGuest(); if(!g) return;
   g.kids = g.kids||[];
-  g.kids.push({name, bday});
+  g.kids.push({name,bday});
   saveGuest(g);
   document.getElementById('kidName').value='';
   document.getElementById('kidBday').value='';
@@ -595,62 +583,57 @@ function addKid(){
 }
 
 function delKid(i){
-  const g = getGuest();
+  const g = getGuest(); if(!g) return;
   g.kids.splice(i,1);
   saveGuest(g);
   renderKids();
 }
 
-// ── UI HELPERS ────────────────────────────────────────────────────────────────
 function stab(tab){
   ['levels','perks','history'].forEach(t=>{
-    document.getElementById('tp-'+t).classList.toggle('active', t===tab);
-    document.getElementById('tb-'+t).classList.toggle('active', t===tab);
-    const bn = document.getElementById('bn-'+t);
-    if(bn) bn.classList.toggle('active', t===tab);
+    document.getElementById('tp-'+t).classList.toggle('active',t===tab);
+    document.getElementById('tb-'+t).classList.toggle('active',t===tab);
+    const bn=document.getElementById('bn-'+t);
+    if(bn) bn.classList.toggle('active',t===tab);
   });
 }
 
+// Один escClose listener на весь документ — без утечек
 function om(id){
-  const el = document.getElementById(id);
-  el.classList.add('active');
+  document.getElementById(id).classList.add('active');
   if(id==='kidsMo') renderKids();
-  if(id==='qrMo'){
-    const qrEl = document.getElementById('qrCanvas');
-    qrEl.innerHTML='';
-    const g=getGuest();
-    if(g) try{new QRCode(qrEl,{text:g.phone,width:180,height:180,correctLevel:QRCode.CorrectLevel.M});}catch(e){}
-  }
-  document.addEventListener('keydown', escClose);
+  if(id==='qrMo'){ const g=getGuest(); if(g) renderQR(g); }
 }
 function cm(id){ document.getElementById(id).classList.remove('active'); }
-function escClose(e){ if(e.key==='Escape') document.querySelectorAll('.mo.active').forEach(m=>m.classList.remove('active')); }
 
-function toast(msg, dur=2800){
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') document.querySelectorAll('.mo.active').forEach(m=>m.classList.remove('active'));
+});
+
+function toast(msg,dur=2800){
   const t=document.getElementById('toast');
   t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), dur);
+  setTimeout(()=>t.classList.remove('show'),dur);
 }
 
 function shake(id){
   const el=document.getElementById(id);
   el.classList.add('err');
   el.style.animation='shake 0.4s ease';
-  setTimeout(()=>{ el.style.animation=''; el.classList.remove('err'); }, 400);
+  setTimeout(()=>{el.style.animation='';el.classList.remove('err');},400);
 }
 
-function animCount(id, target){
-  const el = document.getElementById(id);
-  const start = parseInt(el.textContent)||0;
-  const diff = target-start;
-  if(!diff){ el.textContent=target; return; }
+let _countTimers={};
+function animCount(id,target){
+  if(_countTimers[id]) clearInterval(_countTimers[id]);
+  const el=document.getElementById(id);
   const steps=30, dur=800;
   let i=0;
-  const ti = setInterval(()=>{
+  _countTimers[id]=setInterval(()=>{
     i++;
-    el.textContent = Math.round(start + diff*(i/steps));
-    if(i>=steps){ el.textContent=target; clearInterval(ti); }
-  }, dur/steps);
+    el.textContent=Math.round(target*(i/steps));
+    if(i>=steps){el.textContent=target;clearInterval(_countTimers[id]);}
+  },dur/steps);
 }
 
 function confetti(){
@@ -662,38 +645,37 @@ function confetti(){
       c.textContent=emojis[Math.floor(Math.random()*emojis.length)];
       c.style.cssText=`left:${Math.random()*100}vw;top:${30+Math.random()*40}vh;--dx:${(Math.random()-0.5)*200}px;--r:${(Math.random()-0.5)*360}deg`;
       document.body.appendChild(c);
-      setTimeout(()=>c.remove(), 1000);
-    }, i*60);
+      setTimeout(()=>c.remove(),1000);
+    },i*60);
   }
 }
 
 function fmtDate(d){
   if(!d) return '';
   try{
-    const dt = new Date(d);
-    return dt.toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
-  }catch{ return d; }
+    const [y,m,day]=String(d).slice(0,10).split('-').map(Number);
+    return new Date(y,m-1,day).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});
+  }catch{return d;}
 }
 
-// ── BROADCAST (синхронизация с вкладкой кассира) ──────────────────────────────
-if(BC) BC.onmessage = (e) => {
-  if(e.data.type==='guest_update') renderMain();
+function today(){
+  const d=new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+if(BC) BC.onmessage=(e)=>{
+  if(e.data.type==='guest_update')        renderMain();
   if(e.data.type==='announcements_update') renderAnnouncements();
 };
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-window.addEventListener('load', ()=>{
-  const guest = getGuest();
+window.addEventListener('load',()=>{
+  const guest=getGuest();
   if(guest) renderMain();
-  else showReg();
-  setTimeout(()=>{
-    const loader=document.getElementById('loader');loader.style.opacity='0';loader.style.transition='opacity 0.3s';setTimeout(()=>{loader.remove();},350);
-  }, 600);
+  else      showReg();
+  const loader=document.getElementById('loader');
+  loader.style.opacity='0';
+  setTimeout(()=>loader.remove(),350);
 });
 </script>
-
-<style>
-@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
-</style>
 </body>
 </html>
