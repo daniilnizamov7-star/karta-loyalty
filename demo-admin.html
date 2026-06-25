@@ -187,6 +187,7 @@ textarea.ann-inp{resize:vertical;min-height:70px;font-family:inherit}
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="lcard">
+    <a href="index.html" style="display:inline-flex;align-items:center;gap:6px;font-size:0.78rem;font-weight:700;color:#8090b0;text-decoration:none;margin-bottom:20px;padding:6px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:100px">← На сайт</a>
     <div class="llogo">⭐ STARPASS</div>
     <div class="lsub">Панель управления · Только для персонала</div>
     <input class="linput" type="password" id="passInp" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')login()">
@@ -538,9 +539,12 @@ function logout(){
   currentRole=null; currentStaff='';
   document.getElementById('cashierScreen').classList.remove('show');
   document.getElementById('adminScreen').classList.remove('show');
+  document.getElementById('nameScreen').classList.remove('show');
   document.getElementById('loginScreen').classList.remove('hide');
   document.getElementById('passInp').value='';
   document.getElementById('lerr').textContent='';
+  document.getElementById('staffNameInp').value='';
+}
 }
 
 function fillPass(p){ document.getElementById('passInp').value=p; login(); }
