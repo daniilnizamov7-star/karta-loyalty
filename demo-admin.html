@@ -560,7 +560,6 @@ function logout(){
   document.getElementById('lerr').textContent='';
   document.getElementById('staffNameInp').value='';
 }
-}
 
 function fillPass(p){ document.getElementById('passInp').value=p; login(); }
 
@@ -586,9 +585,10 @@ function guestCard(g, listId){
     ? `<button class="gbtn gbtn-bday" onclick="doBday('${listId}')">🎂 ×${cfg.bday} ДР</button>` : '';
   const redeemBtn = isManager
     ? `<button class="gbtn gbtn-redeem" onclick="doRedeem('${listId}')">🎟️ −${cfg.redeem}★</button>` : '';
-  const promosBtns = promos.map(p=>
-    `<button class="gbtn gbtn-promo" onclick="doPromo('${listId}','${p.id}','${p.stars}','${p.name.replace(/'/g,'\\'')}')">🎁 ${p.name} +${p.stars}★</button>`
-  ).join('');
+  const promosBtns = promos.map(p=>{
+    const safeName = p.name.replace(/"/g,'&quot;');
+    return `<button class="gbtn gbtn-promo" data-lid="${listId}" data-pid="${p.id}" data-stars="${p.stars}" data-name="${safeName}" onclick="handlePromo(this)">🎁 ${p.name} +${p.stars}★</button>`;
+  }).join('');
 
   const initials = g.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
 
@@ -678,6 +678,14 @@ function doRedeem(listId){
       toast('🎟️ −'+cfg.redeem+'★ списано');
       refreshAll(listId);
     });
+}
+
+function handlePromo(btn){
+  const listId=btn.dataset.lid;
+  const promoId=btn.dataset.pid;
+  const stars=btn.dataset.stars;
+  const name=btn.dataset.name;
+  doPromo(listId,promoId,stars,name);
 }
 
 function doPromo(listId, promoId, stars, name){
