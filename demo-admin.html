@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#04050e">
+<title>⭐ StarPass · Панель управления</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI',system-ui,sans-serif;background:#04050e;color:#eef2ff;min-height:100vh;overflow-x:hidden}
+
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;z-index:1000;background:#04050e;display:flex;align-items:center;justify-content:center;padding:24px}
+#loginScreen.hide{display:none}
+.lcard{background:#0e1028;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px 28px;width:100%;max-width:380px;text-align:center}
+.llogo{font-size:1.5rem;font-weight:900;margin-bottom:4px;background:linear-gradient(135deg,#ff3cac,#2d9cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.lsub{font-size:0.82rem;color:#8090b0;margin-bottom:24px;line-height:1.5}
+.linput{width:100%;padding:14px 18px;margin-bottom:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;color:#eef2ff;font-size:1rem;outline:none;-webkit-appearance:none;transition:border 0.2s}
+.linput:focus{border-color:#ff3cac}
+.lbtn{width:100%;padding:15px;border:none;border-radius:100px;background:linear-gradient(135deg,#ff3cac,#c4007a);color:#fff;font-size:0.95rem;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lbtn:active{opacity:0.8}
+.lerr{font-size:0.82rem;color:#ff5c5c;margin-top:10px;min-height:20px}
+.demo-hints{margin-top:16px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 14px;text-align:left}
+.demo-hint-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:0.78rem;border-bottom:1px solid rgba(255,255,255,0.05)}
+.demo-hint-row:last-child{border-bottom:none}
+.dhr-role{color:#8090b0}
+.dhr-pass{font-family:monospace;font-size:0.85rem;cursor:pointer;padding:2px 8px;border-radius:6px;background:rgba(255,255,255,0.06)}
+.dhr-pass:hover{background:rgba(255,255,255,0.1)}
+
+/* NAME SCREEN */
+#nameScreen{position:fixed;inset:0;z-index:999;background:#04050e;display:none;align-items:center;justify-content:center;padding:24px}
+#nameScreen.show{display:flex}
+.ncard{background:#0e1028;border:1px solid rgba(255,255,255,0.08);border-radius:24px;padding:40px 28px;width:100%;max-width:380px;text-align:center}
+
+/* ROLE BADGE */
+.role-badge{display:inline-flex;align-items:center;gap:6px;font-size:0.7rem;font-weight:800;padding:4px 12px;border-radius:100px;letter-spacing:0.05em}
+.role-cashier{background:rgba(45,156,255,0.15);color:#2d9cff;border:1px solid rgba(45,156,255,0.3)}
+.role-manager{background:rgba(155,89,255,0.15);color:#9b59ff;border:1px solid rgba(155,89,255,0.3)}
+.role-director{background:rgba(255,60,172,0.15);color:#ff3cac;border:1px solid rgba(255,60,172,0.3)}
+
+/* SCREENS */
+#adminScreen{display:none} #adminScreen.show{display:block}
+#cashierScreen{display:none} #cashierScreen.show{display:block}
+
+.atop{position:sticky;top:0;z-index:100;background:rgba(4,5,14,0.96);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.07);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.atop-left{display:flex;align-items:center;gap:10px;min-width:0}
+.atop-title{font-size:1rem;font-weight:900;white-space:nowrap}
+.atop-logout{font-size:0.75rem;font-weight:700;color:#8090b0;background:rgba(255,255,255,0.06);border:none;padding:7px 14px;border-radius:100px;cursor:pointer;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+
+.anav{display:flex;background:#08091a;border-bottom:1px solid rgba(255,255,255,0.07);overflow-x:auto;scrollbar-width:none}
+.anav::-webkit-scrollbar{display:none}
+.atab{flex:1;min-width:64px;padding:12px 4px;text-align:center;font-size:0.65rem;font-weight:800;color:#5a6a90;cursor:pointer;border:none;background:none;transition:all 0.2s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.atab .ti{font-size:1.2rem;display:block;margin-bottom:3px}
+.atab.on{color:#ff3cac;background:rgba(255,60,172,0.07)}
+.atab.hidden{display:none}
+
+.apanel{display:none;padding:16px} .apanel.on{display:block}
+
+/* STATS */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.scard{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:18px 14px;text-align:center}
+.snum{font-size:2rem;font-weight:900;line-height:1;margin-bottom:4px}
+.slbl{font-size:0.72rem;color:#8090b0;font-weight:700}
+
+/* GUESTS */
+.sec-t{font-size:0.72rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#5a6a90;margin-bottom:10px}
+.search-inp{width:100%;padding:11px 16px;margin-bottom:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;color:#eef2ff;font-size:0.9rem;outline:none;-webkit-appearance:none}
+.glist{display:flex;flex-direction:column;gap:8px}
+.gcard{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px}
+.gcard-top{display:flex;align-items:center;gap:12px}
+.gav{width:40px;height:40px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,#ff3cac,#9b59ff);display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;color:#fff}
+.ginfo{flex:1;min-width:0}
+.gname{font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gphone{font-size:0.75rem;color:#8090b0;margin-top:2px}
+.gstars{font-size:0.82rem;font-weight:700;margin-top:2px}
+.glevel{display:inline-block;font-size:0.65rem;font-weight:700;margin-top:3px;padding:2px 8px;border-radius:100px;border:1px solid}
+.gactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px}
+.gbtn{padding:7px 13px;border-radius:100px;font-size:0.72rem;font-weight:800;cursor:pointer;-webkit-tap-highlight-color:transparent;border:1px solid;white-space:nowrap;transition:opacity 0.15s}
+.gbtn:active{opacity:0.7}
+.gbtn-visit{background:rgba(6,214,160,0.1);border-color:rgba(6,214,160,0.25);color:#06d6a0}
+.gbtn-bday{background:rgba(255,209,102,0.1);border-color:rgba(255,209,102,0.25);color:#ffd166}
+.gbtn-redeem{background:rgba(255,60,172,0.1);border-color:rgba(255,60,172,0.25);color:#ff3cac}
+.gbtn-new{background:rgba(45,156,255,0.1);border-color:rgba(45,156,255,0.25);color:#2d9cff}
+.gbtn-promo{background:rgba(155,89,255,0.1);border-color:rgba(155,89,255,0.25);color:#9b59ff}
+
+/* CASHIER SECTION */
+.cashier-info{background:rgba(45,156,255,0.06);border:1px solid rgba(45,156,255,0.18);border-radius:14px;padding:14px 16px;margin-bottom:16px;font-size:0.82rem;color:#8090b0;line-height:1.6}
+.cashier-staff-badge{display:flex;align-items:center;gap:8px;background:rgba(45,156,255,0.08);border:1px solid rgba(45,156,255,0.2);border-radius:100px;padding:7px 14px;margin-bottom:14px;font-size:0.8rem;color:#2d9cff;font-weight:700}
+
+/* WELCOME CARD (new guest) */
+.welcome-card{background:linear-gradient(135deg,rgba(6,214,160,0.12),rgba(45,156,255,0.07));border:1px solid rgba(6,214,160,0.25);border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;display:none}
+.welcome-card.show{display:block}
+.wc-ico{font-size:2.5rem;margin-bottom:8px}
+.wc-title{font-weight:900;font-size:1rem;margin-bottom:4px;color:#06d6a0}
+.wc-sub{font-size:0.82rem;color:#8090b0}
+
+/* NEW GUEST FORM */
+.new-guest-form{background:#0e1028;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:14px;display:none}
+.new-guest-form.show{display:block}
+.nf-title{font-size:0.72rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;color:#5a6a90;margin-bottom:12px}
+.nf-inp{width:100%;padding:12px 14px;margin-bottom:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#eef2ff;font-size:0.9rem;outline:none;-webkit-appearance:none}
+.nf-inp:focus{border-color:#2d9cff}
+.nf-btns{display:flex;gap:8px}
+
+/* BOOKINGS */
+.bcard{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:16px;margin-bottom:10px}
+.bname{font-weight:700;font-size:0.9rem;margin-bottom:4px}
+.bmeta{font-size:0.8rem;color:#8090b0;line-height:1.5}
+.bstatus{display:inline-block;margin-top:10px;font-size:0.7rem;font-weight:800;padding:4px 12px;border-radius:100px}
+.bstatus.new{background:rgba(255,60,172,0.12);color:#ff3cac}
+.bstatus.progress{background:rgba(255,209,102,0.1);color:#ffd166}
+.bstatus.done{background:rgba(6,214,160,0.1);color:#06d6a0}
+.bcard-actions{display:flex;gap:8px;margin-top:10px;border-top:1px solid rgba(255,255,255,0.05);padding-top:10px}
+
+/* HISTORY */
+.hcard{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:12px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.hico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.hico.p{background:rgba(6,214,160,0.1)} .hico.m{background:rgba(255,92,92,0.1)}
+.hinfo{flex:1;min-width:0}
+.haction{font-size:0.84rem;font-weight:700}
+.hmeta{font-size:0.73rem;color:#8090b0;margin-top:2px}
+.hpts{font-size:0.88rem;font-weight:900;flex-shrink:0}
+.hpts.p{color:#06d6a0} .hpts.m{color:#ff5c5c}
+
+/* SETTINGS */
+.set-row{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.set-info{flex:1}
+.set-name{font-weight:700;font-size:0.88rem;margin-bottom:3px}
+.set-desc{font-size:0.76rem;color:#8090b0}
+.set-inp{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);border-radius:8px;color:#eef2ff;font-size:0.85rem;padding:6px 10px;width:80px;text-align:right;outline:none;-webkit-appearance:none}
+.set-save{padding:6px 14px;border-radius:100px;background:rgba(6,214,160,0.1);border:1px solid rgba(6,214,160,0.25);color:#06d6a0;font-size:0.72rem;font-weight:800;cursor:pointer;white-space:nowrap}
+
+/* PROMO CARDS */
+.pcard{background:#0e1028;border:1px solid rgba(155,89,255,0.18);border-radius:14px;padding:14px;margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.pc-info{flex:1}
+.pc-name{font-weight:700;font-size:0.86rem;margin-bottom:2px}
+.pc-meta{font-size:0.76rem;color:#8090b0}
+.pc-del{padding:5px 12px;border-radius:100px;background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.2);color:#ff5c5c;font-size:0.72rem;font-weight:700;cursor:pointer;flex-shrink:0}
+
+/* PASS ROW */
+.pass-row{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pass-info{flex:1}
+.pass-name{font-weight:700;font-size:0.88rem}
+.pass-desc{font-size:0.74rem;color:#8090b0;margin-top:2px}
+.pass-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.pass-val{font-family:monospace;font-size:0.82rem;color:#5a6a90;cursor:pointer;min-width:70px;text-align:right}
+
+/* ANNOUNCEMENTS */
+.ann-form{background:#0e1028;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:16px;margin-bottom:16px}
+.ann-card{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px;margin-bottom:8px}
+.ann-card-title{font-weight:700;font-size:0.88rem;margin-bottom:4px}
+.ann-card-meta{font-size:0.74rem;color:#8090b0;margin-bottom:8px;line-height:1.4}
+.ann-del{padding:5px 12px;border-radius:100px;background:rgba(255,92,92,0.1);border:1px solid rgba(255,92,92,0.2);color:#ff5c5c;font-size:0.72rem;font-weight:700;cursor:pointer}
+.ann-inp{width:100%;padding:11px 14px;margin-bottom:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;color:#eef2ff;font-size:0.88rem;outline:none;-webkit-appearance:none}
+.ann-inp:focus{border-color:#ff3cac}
+textarea.ann-inp{resize:vertical;min-height:70px;font-family:inherit}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(10px);background:#131535;border:1px solid rgba(255,255,255,0.12);border-radius:100px;padding:11px 22px;font-size:0.85rem;font-weight:700;opacity:0;transition:all 0.3s;pointer-events:none;white-space:nowrap;z-index:9999;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* CONFIRM MODAL */
+.mo-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.75);display:none;align-items:flex-end;justify-content:center;padding:20px}
+.mo-overlay.show{display:flex}
+.mo-box{background:#0e1028;border:1px solid rgba(255,255,255,0.1);border-radius:24px 24px 16px 16px;padding:28px 24px;width:100%;max-width:420px}
+.mo-title{font-size:1.05rem;font-weight:900;margin-bottom:8px}
+.mo-desc{font-size:0.85rem;color:#8090b0;line-height:1.6;margin-bottom:24px}
+.mo-btns{display:flex;gap:10px}
+.mo-confirm{flex:1;padding:13px;border:none;border-radius:100px;background:linear-gradient(135deg,#ff3cac,#c4007a);color:#fff;font-size:0.9rem;font-weight:700;cursor:pointer}
+.mo-cancel-btn{flex:1;padding:13px;border:1px solid rgba(255,255,255,0.12);border-radius:100px;background:transparent;color:#8090b0;font-size:0.9rem;font-weight:700;cursor:pointer}
+
+.empty{text-align:center;color:#5a6a90;padding:40px 20px;font-size:0.88rem}
+
+/* TOP-3 */
+.top3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.t3card{background:#0e1028;border:1px solid rgba(255,255,255,0.07);border-radius:14px;padding:14px 10px;text-align:center}
+.t3pos{font-size:1.4rem;margin-bottom:6px}
+.t3name{font-size:0.75rem;font-weight:700;margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.t3stars{font-size:0.7rem;color:#ffd166;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- LOGIN -->
+<div id="loginScreen">
+  <div class="lcard">
+    <div class="llogo">⭐ STARPASS</div>
+    <div class="lsub">Панель управления · Только для персонала</div>
+    <input class="linput" type="password" id="passInp" placeholder="Введите пароль" onkeydown="if(event.key==='Enter')login()">
+    <button class="lbtn" onclick="login()">Войти →</button>
+    <div class="lerr" id="lerr"></div>
+    <div class="demo-hints">
+      <div style="font-size:0.7rem;color:#5a6a90;margin-bottom:8px;font-weight:700">ДЕМО-ПАРОЛИ (нажмите чтобы подставить):</div>
+      <div class="demo-hint-row"><span class="dhr-role">🟢 Кассир</span><span class="dhr-pass" onclick="fillPass('1111')">1111</span></div>
+      <div class="demo-hint-row"><span class="dhr-role">🟣 Менеджер</span><span class="dhr-pass" onclick="fillPass('2222')">2222</span></div>
+      <div class="demo-hint-row"><span class="dhr-role">🔴 Директор</span><span class="dhr-pass" onclick="fillPass('3333')">3333</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- NAME SCREEN (кассир) -->
+<div id="nameScreen">
+  <div class="ncard">
+    <div style="font-size:2.5rem;margin-bottom:12px">👤</div>
+    <div style="font-size:1.1rem;font-weight:900;margin-bottom:6px">Как вас зовут?</div>
+    <div style="font-size:0.84rem;color:#8090b0;margin-bottom:24px;line-height:1.5">Ваше имя будет записано в историю начислений — директор увидит, кто и когда работал</div>
+    <input class="linput" type="text" id="staffNameInp" placeholder="Например: Ольга" onkeydown="if(event.key==='Enter')saveName()">
+    <button class="lbtn" onclick="saveName()">Начать работу</button>
+    <div class="lerr" id="nerr"></div>
+  </div>
+</div>
+
+<!-- CASHIER SCREEN -->
+<div id="cashierScreen">
+  <div class="atop">
+    <div class="atop-left">
+      <div class="atop-title">⭐ StarPass</div>
+      <div class="role-badge role-cashier">🟢 Кассир</div>
+    </div>
+    <button class="atop-logout" onclick="logout()">Выйти</button>
+  </div>
+  <div style="padding:16px">
+    <div class="cashier-staff-badge" id="cashierStaffLabel">👤 —</div>
+
+    <!-- WELCOME CARD -->
+    <div class="welcome-card" id="welcomeCard">
+      <div class="wc-ico">🎉</div>
+      <div class="wc-title" id="wcTitle">Добро пожаловать!</div>
+      <div class="wc-sub">Новый гость зарегистрирован. Звёзды начислены!</div>
+    </div>
+
+    <div class="cashier-info">Найди гостя по имени или телефону, нажми <strong style="color:#06d6a0">+100★ Визит</strong>. Если гость новый — нажми «Регистрация».</div>
+
+    <button class="gbtn gbtn-new" style="width:100%;padding:11px;margin-bottom:12px;font-size:0.82rem" onclick="toggleNewGuestForm()">➕ Зарегистрировать нового гостя</button>
+
+    <!-- NEW GUEST FORM (cashier) -->
+    <div class="new-guest-form" id="newGuestForm">
+      <div class="nf-title">Новый гость</div>
+      <input class="nf-inp" type="text" id="nf-name" placeholder="Имя гостя *">
+      <input class="nf-inp" type="tel" id="nf-phone" placeholder="Телефон * (+7...)">
+      <input class="nf-inp" type="date" id="nf-bday" placeholder="ДР ребёнка (необязательно)">
+      <div class="nf-btns">
+        <button class="gbtn gbtn-visit" style="flex:1;padding:10px" onclick="registerNewGuest()">✅ Зарегистрировать</button>
+        <button class="gbtn" style="flex:1;padding:10px;color:#5a6a90;border-color:rgba(255,255,255,0.1);background:none" onclick="toggleNewGuestForm()">Отмена</button>
+      </div>
+    </div>
+
+    <input class="search-inp" type="text" placeholder="🔍 Поиск по имени или телефону" oninput="searchGuests(this.value,'cashierList')">
+    <div class="glist" id="cashierList"><div class="empty">Загружаем список...</div></div>
+  </div>
+</div>
+
+<!-- MANAGER / DIRECTOR SCREEN -->
+<div id="adminScreen">
+  <div class="atop">
+    <div class="atop-left">
+      <div class="atop-title">⭐ StarPass</div>
+      <div class="role-badge" id="roleBadge"></div>
+    </div>
+    <button class="atop-logout" onclick="logout()">Выйти</button>
+  </div>
+  <div class="anav">
+    <button class="atab on" onclick="tab('dash')" id="tb-dash"><span class="ti">📊</span>Дашборд</button>
+    <button class="atab" onclick="tab('guests')" id="tb-guests"><span class="ti">👥</span>Гости</button>
+    <button class="atab" onclick="tab('book')" id="tb-book"><span class="ti">📅</span>Заявки</button>
+    <button class="atab" onclick="tab('hist')" id="tb-hist"><span class="ti">📋</span>История</button>
+    <button class="atab" onclick="tab('set')" id="tb-set"><span class="ti">⚙️</span>Настройки</button>
+    <button class="atab hidden" onclick="tab('ann')" id="tb-ann"><span class="ti">📢</span>Объявления</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="apanel on" id="p-dash">
+    <div class="stats">
+      <div class="scard"><div class="snum" id="s-guests" style="color:#2d9cff">—</div><div class="slbl">Гостей</div></div>
+      <div class="scard"><div class="snum" id="s-stars" style="color:#ffd166">—</div><div class="slbl">★ Выдано</div></div>
+      <div class="scard"><div class="snum" id="s-visits" style="color:#06d6a0">—</div><div class="slbl">Визитов</div></div>
+      <div class="scard"><div class="snum" id="s-book" style="color:#ff3cac">—</div><div class="slbl">Заявок</div></div>
+    </div>
+    <div class="sec-t">Топ-3 гостя</div>
+    <div class="top3" id="top3"></div>
+    <div class="sec-t">Последние гости</div>
+    <div class="glist" id="recentGuests"><div class="empty">Загружаем...</div></div>
+  </div>
+
+  <!-- GUESTS -->
+  <div class="apanel" id="p-guests">
+    <input class="search-inp" type="text" placeholder="🔍 Поиск по имени или телефону" oninput="searchGuests(this.value,'guestsList')">
+    <div class="glist" id="guestsList"><div class="empty">Загружаем...</div></div>
+  </div>
+
+  <!-- BOOKINGS -->
+  <div class="apanel" id="p-book">
+    <div id="bookList"><div class="empty">Загружаем...</div></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="apanel" id="p-hist">
+    <div class="sec-t" style="margin-bottom:12px">Последние 50 операций</div>
+    <div id="histList"><div class="empty">Загружаем...</div></div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="apanel" id="p-set">
+    <div class="sec-t">Настройки программы лояльности</div>
+    <div class="set-row">
+      <div class="set-info"><div class="set-name">★ за визит</div><div class="set-desc">Начисляется кассиром при каждом посещении</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input class="set-inp" id="cfg-visit" type="number" min="1" max="9999" value="100">
+        <button class="set-save" onclick="saveCfg('visit')">Сохранить</button>
+      </div>
+    </div>
+    <div class="set-row">
+      <div class="set-info"><div class="set-name">×N бонус в день рождения</div><div class="set-desc">Множитель звёзд в ДР ребёнка</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input class="set-inp" id="cfg-bday" type="number" min="1" max="10" value="3" style="width:60px">
+        <button class="set-save" onclick="saveCfg('bday')">Сохранить</button>
+      </div>
+    </div>
+    <div class="set-row">
+      <div class="set-info"><div class="set-name">★ за бесплатный визит</div><div class="set-desc">Сколько звёзд списывается при обмене</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input class="set-inp" id="cfg-redeem" type="number" min="100" max="99999" value="1000">
+        <button class="set-save" onclick="saveCfg('redeem')">Сохранить</button>
+      </div>
+    </div>
+
+    <!-- PROMOS — только директор -->
+    <div id="promoBlock" style="display:none">
+      <div class="sec-t" style="margin-top:20px">Акции и спецбонусы</div>
+      <div style="font-size:0.78rem;color:#8090b0;margin-bottom:12px;line-height:1.5">Временные акции — кнопка появляется у каждого гостя у кассира и менеджера</div>
+      <div id="promoList"></div>
+      <div style="background:#0e1028;border:1px solid rgba(155,89,255,0.18);border-radius:14px;padding:14px;margin-top:4px">
+        <div class="sec-t" style="margin-bottom:10px">Новая акция</div>
+        <input class="search-inp" id="promo-name" type="text" placeholder="Название, например: 🎉 День города +200★" style="margin-bottom:8px">
+        <div style="display:flex;gap:8px;margin-bottom:4px">
+          <input class="set-inp" id="promo-stars" type="number" min="1" max="9999" placeholder="★" style="width:80px;flex-shrink:0">
+          <input class="search-inp" id="promo-until" type="date" style="flex:1;margin-bottom:0">
+        </div>
+        <div style="font-size:0.72rem;color:#5a6a90;margin-bottom:10px">Звёзды · До какой даты (необязательно)</div>
+        <button class="gbtn gbtn-promo" style="width:100%;padding:11px" onclick="addPromo()">+ Добавить акцию</button>
+      </div>
+    </div>
+
+    <!-- PASSWORDS — только директор -->
+    <div id="passBlock" style="display:none">
+      <div class="sec-t" style="margin-top:20px">Доступы сотрудников</div>
+      <div class="pass-row">
+        <div class="pass-info"><div class="pass-name">🟢 Кассир</div><div class="pass-desc">Визиты · регистрация гостей</div></div>
+        <div class="pass-actions">
+          <div class="pass-val" id="pv-cashier" onclick="togglePwd('cashier')">Показать</div>
+          <button class="gbtn gbtn-bday" style="padding:5px 10px;font-size:0.7rem" onclick="changePwd('cashier')">Сменить</button>
+        </div>
+      </div>
+      <div class="pass-row">
+        <div class="pass-info"><div class="pass-name">🟣 Менеджер</div><div class="pass-desc">Гости · заявки · ДР · списание</div></div>
+        <div class="pass-actions">
+          <div class="pass-val" id="pv-manager" onclick="togglePwd('manager')">Показать</div>
+          <button class="gbtn gbtn-bday" style="padding:5px 10px;font-size:0.7rem" onclick="changePwd('manager')">Сменить</button>
+        </div>
+      </div>
+      <div class="pass-row">
+        <div class="pass-info"><div class="pass-name">🔴 Директор</div><div class="pass-desc">Полный доступ · история · акции · настройки</div></div>
+        <div class="pass-actions">
+          <div class="pass-val" id="pv-director" onclick="togglePwd('director')">Показать</div>
+          <button class="gbtn gbtn-bday" style="padding:5px 10px;font-size:0.7rem" onclick="changePwd('director')">Сменить</button>
+        </div>
+      </div>
+      <div style="font-size:0.74rem;color:#5a6a90;margin-top:6px;line-height:1.5">⚠️ После смены пароля сообщите сотруднику новый. Старый перестанет работать сразу.</div>
+    </div>
+  </div>
+
+  <!-- ANNOUNCEMENTS -->
+  <div class="apanel" id="p-ann">
+    <div class="sec-t">Объявления для гостей</div>
+    <div class="ann-form">
+      <div class="sec-t" style="margin-bottom:12px" id="annFormTitle">➕ Новое объявление</div>
+      <input class="ann-inp" type="text" id="ann-title" placeholder="Заголовок (например: 🎉 Летние каникулы!)">
+      <textarea class="ann-inp" id="ann-text" placeholder="Текст объявления..."></textarea>
+      <input class="ann-inp" type="url" id="ann-image" placeholder="Ссылка на картинку (необязательно)">
+      <input class="ann-inp" type="text" id="ann-btn-text" placeholder="Текст кнопки (необязательно)">
+      <input class="ann-inp" type="url" id="ann-btn-url" placeholder="Ссылка кнопки (необязательно)">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <div style="flex:1"><div style="font-size:0.72rem;color:#8090b0;margin-bottom:5px">С какого числа</div>
+          <input type="datetime-local" id="ann-from" class="ann-inp" style="margin-bottom:0;color-scheme:dark"></div>
+        <div style="flex:1"><div style="font-size:0.72rem;color:#8090b0;margin-bottom:5px">До какого числа</div>
+          <input type="datetime-local" id="ann-until" class="ann-inp" style="margin-bottom:0;color-scheme:dark"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="gbtn gbtn-visit" style="flex:1;padding:11px" onclick="saveAnn()">💾 Сохранить</button>
+        <button class="gbtn" style="padding:11px;color:#5a6a90;border-color:rgba(255,255,255,0.1);background:none" onclick="resetAnnForm()" id="annCancelBtn">Отмена</button>
+      </div>
+    </div>
+    <div id="annList"></div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="mo-overlay" id="confirmModal">
+  <div class="mo-box">
+    <div class="mo-title" id="modalTitle"></div>
+    <div class="mo-desc" id="modalDesc"></div>
+    <div class="mo-btns">
+      <button class="mo-cancel-btn" onclick="closeModal()">Отмена</button>
+      <button class="mo-confirm" id="modalConfirmBtn" onclick="confirmAction()">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA LAYER ────────────────────────────────────────────────────────────────
+const BC = typeof BroadcastChannel!=='undefined' ? new BroadcastChannel('demo_sync') : null;
+
+const PASSWORDS_KEY = 'sp_passwords';
+const GUESTS_KEY = 'sp_guest';       // single guest (demo)
+const HISTORY_KEY = 'sp_history';
+const CONFIG_KEY = 'sp_config';
+const PROMOS_KEY = 'sp_promos';
+const BOOKINGS_KEY = 'sp_bookings';
+const ANN_KEY = 'sp_announcements';
+
+function get(k){ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch{return null;} }
+function set(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+
+function getPwd(role){
+  const p = get(PASSWORDS_KEY)||{};
+  return p[role] || {cashier:'1111',manager:'2222',director:'3333'}[role];
+}
+function setPwd(role,val){ const p=get(PASSWORDS_KEY)||{}; p[role]=val; set(PASSWORDS_KEY,p); }
+
+function getCfg(){ return Object.assign({visit:100,bday:3,redeem:1000}, get(CONFIG_KEY)||{}); }
+function getGuest(){ return get(GUESTS_KEY); }
+function saveGuest(g){ set(GUESTS_KEY,g); broadcast('guest_update',{guest:g}); }
+
+function getHistory(){ return get(HISTORY_KEY)||[]; }
+function addHistory(entry){ const h=getHistory(); h.unshift(entry); set(HISTORY_KEY,h.slice(0,200)); }
+
+function getBookings(){ return get(BOOKINGS_KEY)||[]; }
+function getPromos(){ return get(PROMOS_KEY)||[]; }
+function getAnnouncements(){ return get(ANN_KEY)||[]; }
+
+function broadcast(type, data){
+  if(BC) BC.postMessage({type,...data});
+}
+
+// ── DEFAULT DATA ──────────────────────────────────────────────────────────────
+function initDemoData(){
+  if(!getGuest()){
+    set(GUESTS_KEY,{
+      name:'Иванов Иван', phone:'+7 (900) 123-45-67',
+      stars:350, visits:4, since:'2024-09-01',
+      kids:[{name:'Маша',bday:'2019-03-12'},{name:'Коля',bday:'2022-07-05'}],
+      history:[]
+    });
+  }
+  if(!get(HISTORY_KEY)){
+    set(HISTORY_KEY,[
+      {type:'p',action:'Визит в парк',guest:'Иванов Иван',pts:100,date:'2026-06-20',staff:'Ольга'},
+      {type:'p',action:'Визит в парк',guest:'Иванов Иван',pts:100,date:'2026-06-10',staff:'Ольга'},
+      {type:'p',action:'Бонус ДР × Маша 🎂',guest:'Иванов Иван',pts:300,date:'2026-03-12',staff:'Менеджер'},
+      {type:'p',action:'Визит в парк',guest:'Иванов Иван',pts:100,date:'2026-02-14',staff:'Анна'},
+      {type:'m',action:'Обмен на бесплатный визит',guest:'Иванов Иван',pts:-350,date:'2026-01-05',staff:'Администратор'},
+      {type:'p',action:'Визит в парк',guest:'Иванов Иван',pts:100,date:'2025-12-20',staff:'Ольга'},
+    ]);
+  }
+  if(!get(BOOKINGS_KEY)){
+    set(BOOKINGS_KEY,[
+      {id:1,name:'Семья Смирновых',date:'2026-07-05',time:'14:00',kids:2,phone:'+7 (912) 234-56-78',comment:'День рождения Алёны, 5 лет, торт попрошу заранее',status:'new'},
+      {id:2,name:'Петрова Марина',date:'2026-07-12',time:'11:00',kids:3,phone:'+7 (905) 876-54-32',comment:'',status:'progress'},
+      {id:3,name:'Козловы',date:'2026-06-28',time:'16:00',kids:1,phone:'+7 (999) 111-22-33',comment:'Юбилей — 5 лет совместной жизни, детский праздник',status:'done'},
+    ]);
+  }
+  if(!get(ANN_KEY)){
+    set(ANN_KEY,[
+      {id:1,title:'🎉 Летние каникулы — скидки!',text:'Весь июль и август — скидка 10% для семей от 3 человек. Приходите чаще!',btnText:'Узнать подробнее',btnUrl:'demo-landing.html',from:'2026-06-01T00:00',until:'2026-08-31T23:59'},
+      {id:2,title:'📅 Новые аттракционы!',text:'Открылась зона «Космос». Ракетный симулятор, невесомость и звёздная карта — ждём вас!',btnText:'',btnUrl:''},
+    ]);
+  }
+}
+
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+let currentRole = null;
+let currentStaff = '';
+
+const ROLES = {
+  cashier: {label:'🟢 Кассир', cls:'role-cashier', needName:true},
+  manager: {label:'🟣 Менеджер', cls:'role-manager', needName:false},
+  director:{label:'🔴 Директор', cls:'role-director', needName:false},
+};
+
+function login(){
+  const pass = document.getElementById('passInp').value;
+  const role = ['cashier','manager','director'].find(r=>getPwd(r)===pass);
+  if(!role){ document.getElementById('lerr').textContent='Неверный пароль'; return; }
+  currentRole = role;
+  document.getElementById('loginScreen').classList.add('hide');
+  if(ROLES[role].needName){
+    document.getElementById('nameScreen').classList.add('show');
+    setTimeout(()=>document.getElementById('staffNameInp').focus(), 100);
+  } else {
+    currentStaff = ROLES[role].label;
+    launchAdmin();
+  }
+}
+
+function saveName(){
+  const name = document.getElementById('staffNameInp').value.trim();
+  if(!name){ document.getElementById('nerr').textContent='Введите имя'; return; }
+  currentStaff = name;
+  document.getElementById('nameScreen').classList.remove('show');
+  launchAdmin();
+}
+
+function launchAdmin(){
+  if(currentRole==='cashier'){
+    document.getElementById('cashierScreen').classList.add('show');
+    document.getElementById('cashierStaffLabel').textContent = '👤 '+currentStaff;
+    loadCashierList();
+  } else {
+    document.getElementById('adminScreen').classList.add('show');
+    const rb = document.getElementById('roleBadge');
+    rb.textContent = ROLES[currentRole].label;
+    rb.className = 'role-badge '+ROLES[currentRole].cls;
+    if(currentRole==='director'){
+      document.getElementById('tb-ann').classList.remove('hidden');
+      document.getElementById('promoBlock').style.display='block';
+      document.getElementById('passBlock').style.display='block';
+    }
+    loadDash();
+  }
+}
+
+function logout(){
+  currentRole=null; currentStaff='';
+  document.getElementById('cashierScreen').classList.remove('show');
+  document.getElementById('adminScreen').classList.remove('show');
+  document.getElementById('loginScreen').classList.remove('hide');
+  document.getElementById('passInp').value='';
+  document.getElementById('lerr').textContent='';
+}
+
+function fillPass(p){ document.getElementById('passInp').value=p; login(); }
+
+// ── LEVELS ────────────────────────────────────────────────────────────────────
+const LEVELS=[
+  {n:'Новичок',i:'🛸',min:0,max:499,c:'#8090b0'},
+  {n:'Космонавт',i:'🚀',min:500,max:1499,c:'#2d9cff'},
+  {n:'Командир',i:'⚡',min:1500,max:2999,c:'#9b59ff'},
+  {n:'Галактика',i:'👑',min:3000,max:99999,c:'#ffd166'},
+];
+function getLevel(s){ return LEVELS.slice().reverse().find(l=>s>=l.min)||LEVELS[0]; }
+
+// ── GUEST CARD RENDERING ──────────────────────────────────────────────────────
+function guestCard(g, listId){
+  const lv = getLevel(g.stars||0);
+  const isManager = currentRole==='manager'||currentRole==='director';
+  const isCashier = currentRole==='cashier';
+  const cfg = getCfg();
+  const promos = getPromos().filter(p=>!p.until||new Date(p.until)>new Date());
+
+  const visitBtn = `<button class="gbtn gbtn-visit" onclick="doVisit('${listId}')">+${cfg.visit}★ Визит</button>`;
+  const bdayBtn = isManager
+    ? `<button class="gbtn gbtn-bday" onclick="doBday('${listId}')">🎂 ×${cfg.bday} ДР</button>` : '';
+  const redeemBtn = isManager
+    ? `<button class="gbtn gbtn-redeem" onclick="doRedeem('${listId}')">🎟️ −${cfg.redeem}★</button>` : '';
+  const promosBtns = promos.map(p=>
+    `<button class="gbtn gbtn-promo" onclick="doPromo('${listId}','${p.id}','${p.stars}','${p.name.replace(/'/g,'\\'')}')">🎁 ${p.name} +${p.stars}★</button>`
+  ).join('');
+
+  const initials = g.name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+
+  return `<div class="gcard" id="gc-${listId}">
+    <div class="gcard-top">
+      <div class="gav">${initials}</div>
+      <div class="ginfo">
+        <div class="gname">${g.name}</div>
+        <div class="gphone">${g.phone}</div>
+        <div class="gstars">⭐ ${g.stars||0} звёзд · ${g.visits||0} визитов</div>
+        <div class="glevel" style="color:${lv.c};border-color:${lv.c}40">${lv.i} ${lv.n}</div>
+      </div>
+    </div>
+    <div class="gactions">
+      ${visitBtn}${bdayBtn}${redeemBtn}${promosBtns}
+    </div>
+  </div>`;
+}
+
+// ── SEARCH / LOAD ──────────────────────────────────────────────────────────────
+function loadCashierList(){ renderGuestList('cashierList', ''); }
+function searchGuests(q, listId){ renderGuestList(listId, q.toLowerCase()); }
+
+function renderGuestList(listId, q){
+  const g = getGuest();
+  const el = document.getElementById(listId);
+  if(!g){ el.innerHTML='<div class="empty">Нет гостей</div>'; return; }
+  if(q && !g.name.toLowerCase().includes(q) && !g.phone.includes(q)){
+    el.innerHTML='<div class="empty">Гость не найден</div>'; return;
+  }
+  el.innerHTML = guestCard(g, listId);
+}
+
+// ── ACTIONS ───────────────────────────────────────────────────────────────────
+let pendingAction=null;
+
+function confirm$(title, desc, action){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalDesc').textContent=desc;
+  pendingAction=action;
+  document.getElementById('confirmModal').classList.add('show');
+}
+function closeModal(){ document.getElementById('confirmModal').classList.remove('show'); pendingAction=null; }
+function confirmAction(){ if(pendingAction){ pendingAction(); closeModal(); } }
+
+function doVisit(listId){
+  const g=getGuest(); if(!g) return;
+  const cfg=getCfg();
+  confirm$('Начислить визит?',
+    `+${cfg.visit}★ гостю ${g.name}. Кассир: ${currentStaff}`,
+    ()=>{
+      g.stars=(g.stars||0)+cfg.visit;
+      g.visits=(g.visits||0)+1;
+      saveGuest(g);
+      addHistory({type:'p',action:'Визит в парк',guest:g.name,pts:cfg.visit,date:today(),staff:currentStaff});
+      toast('✅ +'+cfg.visit+'★ начислено!');
+      refreshAll(listId);
+      if(currentRole==='cashier') showWelcome(g.name, false);
+    });
+}
+
+function doBday(listId){
+  const g=getGuest(); if(!g) return;
+  const cfg=getCfg();
+  const bonus=cfg.visit*cfg.bday;
+  confirm$('Начислить бонус ДР?',
+    `×${cfg.bday} = +${bonus}★ гостю ${g.name}`,
+    ()=>{
+      g.stars=(g.stars||0)+bonus;
+      saveGuest(g);
+      addHistory({type:'p',action:`Бонус в день рождения ×${cfg.bday} 🎂`,guest:g.name,pts:bonus,date:today(),staff:currentStaff});
+      toast('🎂 +'+bonus+'★ ДР-бонус!');
+      refreshAll(listId);
+    });
+}
+
+function doRedeem(listId){
+  const g=getGuest(); if(!g) return;
+  const cfg=getCfg();
+  if((g.stars||0)<cfg.redeem){ toast('⚠️ Недостаточно звёзд'); return; }
+  confirm$('Списать звёзды?',
+    `−${cfg.redeem}★ за бесплатный визит. Гость: ${g.name}`,
+    ()=>{
+      g.stars=(g.stars||0)-cfg.redeem;
+      saveGuest(g);
+      addHistory({type:'m',action:'Обмен на бесплатный визит 🎟️',guest:g.name,pts:-cfg.redeem,date:today(),staff:currentStaff});
+      toast('🎟️ −'+cfg.redeem+'★ списано');
+      refreshAll(listId);
+    });
+}
+
+function doPromo(listId, promoId, stars, name){
+  const g=getGuest(); if(!g) return;
+  confirm$('Применить акцию?',
+    `+${stars}★ "${name}" для гостя ${g.name}`,
+    ()=>{
+      g.stars=(g.stars||0)+parseInt(stars);
+      saveGuest(g);
+      addHistory({type:'p',action:`Акция: ${name} 🎁`,guest:g.name,pts:parseInt(stars),date:today(),staff:currentStaff});
+      toast('🎁 +'+stars+'★ акция!');
+      refreshAll(listId);
+    });
+}
+
+function showWelcome(name, isNew){
+  const wc=document.getElementById('welcomeCard');
+  document.getElementById('wcTitle').textContent=isNew?`🎉 ${name}, добро пожаловать!`:`✅ Начислено гостю ${name}!`;
+  wc.classList.add('show');
+  setTimeout(()=>wc.classList.remove('show'),3500);
+}
+
+function refreshAll(listId){
+  if(listId) renderGuestList(listId, '');
+  if(currentRole==='director'||currentRole==='manager') loadDash();
+}
+
+// ── NEW GUEST REGISTRATION (cashier) ──────────────────────────────────────────
+function toggleNewGuestForm(){
+  const f=document.getElementById('newGuestForm');
+  f.classList.toggle('show');
+}
+
+function registerNewGuest(){
+  const name=document.getElementById('nf-name').value.trim();
+  const phone=document.getElementById('nf-phone').value.trim();
+  const bday=document.getElementById('nf-bday').value;
+  if(!name||!phone){ toast('⚠️ Введите имя и телефон'); return; }
+  const g={name,phone,stars:0,visits:0,since:today(),kids:bday?[{name:'Ребёнок',bday}]:[],history:[]};
+  saveGuest(g);
+  addHistory({type:'p',action:'Регистрация нового гостя ⭐',guest:name,pts:0,date:today(),staff:currentStaff});
+  document.getElementById('nf-name').value='';
+  document.getElementById('nf-phone').value='';
+  document.getElementById('nf-bday').value='';
+  document.getElementById('newGuestForm').classList.remove('show');
+  loadCashierList();
+  showWelcome(name, true);
+  toast('🎉 '+name+' зарегистрирован!');
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────────────────────────
+function loadDash(){
+  const g=getGuest();
+  const hist=getHistory();
+  const books=getBookings();
+  document.getElementById('s-guests').textContent=g?1:0;
+  const totalStars=hist.filter(h=>h.pts>0).reduce((a,h)=>a+h.pts,0);
+  document.getElementById('s-stars').textContent=totalStars;
+  const totalVisits=hist.filter(h=>h.action.includes('Визит')).length;
+  document.getElementById('s-visits').textContent=totalVisits;
+  document.getElementById('s-book').textContent=books.filter(b=>b.status==='new').length;
+
+  // top3 (только 1 гость в демо, показываем красиво)
+  document.getElementById('top3').innerHTML=g?`
+    <div class="t3card"><div class="t3pos">🥇</div><div class="t3name">${g.name}</div><div class="t3stars">⭐ ${g.stars}</div></div>
+    <div class="t3card" style="opacity:0.35"><div class="t3pos">🥈</div><div class="t3name">—</div><div class="t3stars">—</div></div>
+    <div class="t3card" style="opacity:0.35"><div class="t3pos">🥉</div><div class="t3name">—</div><div class="t3stars">—</div></div>`
+    : '<div class="empty" style="grid-column:1/-1">Нет гостей</div>';
+
+  // recent
+  const el=document.getElementById('recentGuests');
+  el.innerHTML=g?guestCard(g,'dashGuest'):'<div class="empty">Нет гостей</div>';
+  loadGuests();
+  loadHistory();
+  loadBookings();
+  loadPromos();
+  loadAnnList();
+  loadCfgUI();
+  loadPassUI();
+}
+
+function loadGuests(){ const el=document.getElementById('guestsList'); if(el) renderGuestList('guestsList',''); }
+
+function loadHistory(){
+  const el=document.getElementById('histList'); if(!el) return;
+  const hist=getHistory();
+  if(!hist.length){ el.innerHTML='<div class="empty">История пуста</div>'; return; }
+  el.innerHTML=hist.slice(0,50).map(h=>`
+    <div class="hcard">
+      <div class="hico ${h.type}">${h.type==='p'?'⭐':'🎟️'}</div>
+      <div class="hinfo">
+        <div class="haction">${h.action}</div>
+        <div class="hmeta">${h.guest||'—'} · ${fmtDate(h.date)} · ${h.staff||'—'}</div>
+      </div>
+      <div class="hpts ${h.type}">${h.pts>0?'+':''}${h.pts}★</div>
+    </div>`).join('');
+}
+
+// ── BOOKINGS ──────────────────────────────────────────────────────────────────
+function loadBookings(){
+  const el=document.getElementById('bookList'); if(!el) return;
+  const books=getBookings();
+  if(!books.length){ el.innerHTML='<div class="empty">Заявок нет</div>'; return; }
+  const STATUS_LABELS={new:'🔴 Новая',progress:'🟡 В работе',done:'✅ Выполнена'};
+  const STATUS_CLS={new:'new',progress:'progress',done:'done'};
+  el.innerHTML=books.map(b=>`
+    <div class="bcard">
+      <div class="bname">${b.name}</div>
+      <div class="bmeta">
+        📅 ${fmtDate(b.date)} в ${b.time}<br>
+        👶 Детей: ${b.kids}<br>
+        📞 ${b.phone}
+        ${b.comment?`<br>💬 ${b.comment}`:''}
+      </div>
+      <div class="bstatus ${STATUS_CLS[b.status]}">${STATUS_LABELS[b.status]}</div>
+      <div class="bcard-actions">
+        ${b.status!=='done'?`<button class="gbtn gbtn-visit" onclick="setBookingStatus(${b.id},'done')">✅ Выполнена</button>`:''}
+        ${b.status==='new'?`<button class="gbtn gbtn-bday" onclick="setBookingStatus(${b.id},'progress')">▶️ В работу</button>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function setBookingStatus(id, status){
+  const books=getBookings();
+  const b=books.find(x=>x.id===id);
+  if(!b) return;
+  b.status=status;
+  set(BOOKINGS_KEY,books);
+  loadBookings();
+  toast(status==='done'?'✅ Заявка выполнена':'▶️ Заявка в работе');
+}
+
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+function loadCfgUI(){
+  const cfg=getCfg();
+  const v=document.getElementById('cfg-visit'); if(v) v.value=cfg.visit;
+  const b=document.getElementById('cfg-bday'); if(b) b.value=cfg.bday;
+  const r=document.getElementById('cfg-redeem'); if(r) r.value=cfg.redeem;
+}
+function saveCfg(key){
+  const cfg=getCfg();
+  const el=document.getElementById('cfg-'+key);
+  if(!el) return;
+  cfg[key]=parseInt(el.value)||cfg[key];
+  set(CONFIG_KEY,cfg);
+  toast('✅ Настройка сохранена');
+}
+
+// ── PROMOS ────────────────────────────────────────────────────────────────────
+function loadPromos(){
+  const el=document.getElementById('promoList'); if(!el) return;
+  const promos=getPromos();
+  el.innerHTML=promos.length?promos.map(p=>`
+    <div class="pcard">
+      <div class="pc-info">
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-meta">+${p.stars}★${p.until?' · до '+fmtDate(p.until):''}</div>
+      </div>
+      <button class="pc-del" onclick="delPromo(${p.id})">Удалить</button>
+    </div>`).join('')
+  :'<div class="empty" style="padding:16px">Нет активных акций</div>';
+}
+function addPromo(){
+  const name=document.getElementById('promo-name').value.trim();
+  const stars=parseInt(document.getElementById('promo-stars').value);
+  const until=document.getElementById('promo-until').value;
+  if(!name||!stars){ toast('⚠️ Введите название и звёзды'); return; }
+  const promos=getPromos();
+  promos.push({id:Date.now(),name,stars,until:until||''});
+  set(PROMOS_KEY,promos);
+  document.getElementById('promo-name').value='';
+  document.getElementById('promo-stars').value='';
+  document.getElementById('promo-until').value='';
+  loadPromos();
+  toast('✅ Акция добавлена');
+}
+function delPromo(id){
+  const promos=getPromos().filter(p=>p.id!==id);
+  set(PROMOS_KEY,promos);
+  loadPromos();
+  toast('🗑️ Акция удалена');
+}
+
+// ── PASSWORDS ─────────────────────────────────────────────────────────────────
+const pwdVisible={cashier:false,manager:false,director:false};
+function loadPassUI(){
+  ['cashier','manager','director'].forEach(r=>{
+    const el=document.getElementById('pv-'+r); if(!el) return;
+    el.textContent=pwdVisible[r]?getPwd(r):'●●●●';
+  });
+}
+function togglePwd(role){
+  pwdVisible[role]=!pwdVisible[role]; loadPassUI();
+}
+function changePwd(role){
+  const np=prompt(`Новый пароль для роли ${ROLES[role].label}:`);
+  if(!np||!np.trim()){ return; }
+  setPwd(role,np.trim());
+  toast(`✅ Пароль ${ROLES[role].label} обновлён`);
+  loadPassUI();
+}
+
+// ── ANNOUNCEMENTS ─────────────────────────────────────────────────────────────
+let editingAnnId=null;
+function loadAnnList(){
+  const el=document.getElementById('annList'); if(!el) return;
+  const anns=getAnnouncements();
+  if(!anns.length){ el.innerHTML='<div class="empty">Объявлений нет</div>'; return; }
+  el.innerHTML=anns.map(a=>`
+    <div class="ann-card">
+      <div class="ann-card-title">${a.title}</div>
+      <div class="ann-card-meta">${a.text}${a.btnText?` · [${a.btnText}]`:''}${a.from?' · с '+fmtDate(a.from):''}${a.until?' · до '+fmtDate(a.until):''}</div>
+      <div style="display:flex;gap:8px">
+        <button class="gbtn gbtn-bday" style="padding:5px 12px;font-size:0.72rem" onclick="editAnn(${a.id})">✏️ Изменить</button>
+        <button class="ann-del" onclick="delAnn(${a.id})">🗑️ Удалить</button>
+      </div>
+    </div>`).join('');
+}
+function saveAnn(){
+  const title=document.getElementById('ann-title').value.trim();
+  const text=document.getElementById('ann-text').value.trim();
+  if(!title||!text){ toast('⚠️ Введите заголовок и текст'); return; }
+  const anns=getAnnouncements();
+  const obj={
+    id: editingAnnId||Date.now(),
+    title, text,
+    image:document.getElementById('ann-image').value.trim(),
+    btnText:document.getElementById('ann-btn-text').value.trim(),
+    btnUrl:document.getElementById('ann-btn-url').value.trim(),
+    from:document.getElementById('ann-from').value,
+    until:document.getElementById('ann-until').value,
+  };
+  if(editingAnnId){ const i=anns.findIndex(a=>a.id===editingAnnId); if(i>=0) anns[i]=obj; }
+  else anns.push(obj);
+  set(ANN_KEY,obj.id&&editingAnnId?anns:[...anns.filter(a=>a.id!==obj.id),obj]);
+  set(ANN_KEY,anns);
+  broadcast('announcements_update',{});
+  resetAnnForm();
+  loadAnnList();
+  toast('✅ Объявление сохранено');
+}
+function editAnn(id){
+  const a=getAnnouncements().find(x=>x.id===id); if(!a) return;
+  editingAnnId=id;
+  document.getElementById('ann-title').value=a.title;
+  document.getElementById('ann-text').value=a.text;
+  document.getElementById('ann-image').value=a.image||'';
+  document.getElementById('ann-btn-text').value=a.btnText||'';
+  document.getElementById('ann-btn-url').value=a.btnUrl||'';
+  document.getElementById('ann-from').value=a.from||'';
+  document.getElementById('ann-until').value=a.until||'';
+  document.getElementById('annFormTitle').textContent='✏️ Редактировать объявление';
+  document.getElementById('annCancelBtn').style.display='';
+  tab('ann');
+}
+function delAnn(id){
+  const anns=getAnnouncements().filter(a=>a.id!==id);
+  set(ANN_KEY,anns);
+  broadcast('announcements_update',{});
+  loadAnnList();
+  toast('🗑️ Объявление удалено');
+}
+function resetAnnForm(){
+  editingAnnId=null;
+  ['ann-title','ann-text','ann-image','ann-btn-text','ann-btn-url','ann-from','ann-until'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('annFormTitle').textContent='➕ Новое объявление';
+}
+
+// ── TAB NAVIGATION ────────────────────────────────────────────────────────────
+function tab(name){
+  document.querySelectorAll('.apanel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
+  const panel=document.getElementById('p-'+name);
+  const tabBtn=document.getElementById('tb-'+name);
+  if(panel) panel.classList.add('on');
+  if(tabBtn) tabBtn.classList.add('on');
+  if(name==='guests') loadGuests();
+  if(name==='hist') loadHistory();
+  if(name==='book') loadBookings();
+  if(name==='set'){ loadPromos(); loadPassUI(); loadCfgUI(); }
+  if(name==='ann') loadAnnList();
+}
+
+// ── UTILS ──────────────────────────────────────────────────────────────────────
+function today(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(d){
+  if(!d) return '';
+  try{ return new Date(d).toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'}); }catch{ return d; }
+}
+function toast(msg, dur=2800){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ── BROADCAST ─────────────────────────────────────────────────────────────────
+if(BC) BC.onmessage=(e)=>{
+  if(e.data.type==='guest_update'){ refreshAll(null); }
+};
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+initDemoData();
+</script>
+</body>
+</html>
