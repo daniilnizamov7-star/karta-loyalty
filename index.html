@@ -8,12 +8,11 @@
 <style>
 :root{
   --bg:#04050e;--card:#0d0f1e;--card2:#13162a;
-  --bdark:rgba(255,255,255,0.07);
-  --blight:rgba(0,0,0,0.08);
+  --bd:rgba(255,255,255,0.07);--bd2:rgba(255,255,255,0.13);
   --neon:#ff3cac;--blue:#2d9cff;--purple:#9b59ff;
-  --yellow:#ffd166;--green:#06d6a0;
-  --light:#f4f6fb;--lcard:#fff;
-  --dark:#1a1f36;--muted:#6b7a99;--muted2:#8090b0;
+  --yellow:#ffd166;--green:#06d6a0;--red:#ff5c5c;
+  --light:#f4f6fb;--lcard:#fff;--dark:#1a1f36;
+  --muted:#6b7a99;--muted2:#8090b0;
   --fh:-apple-system,'Segoe UI Variable Display','Segoe UI',system-ui,sans-serif;
   --fb:-apple-system,'Segoe UI',system-ui,sans-serif;
 }
@@ -21,291 +20,353 @@
 html{scroll-behavior:smooth}
 body{font-family:var(--fb);background:var(--bg);color:#eef2ff;overflow-x:hidden}
 
-/* ── NAV ── */
-nav{position:fixed;top:0;left:0;right:0;z-index:200;
-  padding:14px 28px;display:flex;align-items:center;justify-content:space-between;
-  transition:all 0.3s}
-nav.scrolled{background:rgba(4,5,14,0.95);backdrop-filter:blur(20px);
-  border-bottom:1px solid var(--bdark)}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:300;padding:14px 28px;
+  display:flex;align-items:center;justify-content:space-between;transition:all 0.3s}
+nav.sc{background:rgba(4,5,14,0.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd)}
 .nav-logo{font-family:var(--fh);font-size:1.1rem;font-weight:900;
   background:linear-gradient(135deg,var(--neon),var(--blue));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;text-decoration:none}
 .nav-links{display:flex;gap:28px}
-.nav-link{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.6);
+.nav-link{font-size:0.82rem;font-weight:600;color:rgba(255,255,255,0.55);
   text-decoration:none;transition:color 0.2s}
 .nav-link:hover{color:#fff}
-.nav-btns{display:flex;gap:10px;align-items:center}
-.nb{padding:9px 20px;border-radius:100px;font-size:0.8rem;font-weight:700;
+.nav-cta{display:flex;gap:10px}
+.nc{padding:8px 20px;border-radius:100px;font-size:0.8rem;font-weight:700;
   text-decoration:none;transition:all 0.2s;-webkit-tap-highlight-color:transparent}
-.nb-out{border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.8)}
-.nb-out:hover{border-color:#fff;color:#fff}
-.nb-fill{background:linear-gradient(135deg,var(--neon),#c4007a);color:#fff;
-  box-shadow:0 0 20px rgba(255,60,172,0.3)}
-.nb-fill:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(255,60,172,0.45)}
+.nc-o{border:1px solid rgba(255,255,255,0.16);color:rgba(255,255,255,0.75)}
+.nc-o:hover{border-color:#fff;color:#fff}
+.nc-f{background:linear-gradient(135deg,var(--neon),#c4007a);color:#fff;
+  box-shadow:0 0 20px rgba(255,60,172,0.28)}
+.nc-f:hover{transform:translateY(-1px);box-shadow:0 4px 24px rgba(255,60,172,0.45)}
 
-/* ── HERO ── */
-.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;
-  justify-content:center;padding:100px 24px 60px;position:relative;overflow:hidden;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(155,89,255,0.12),transparent),
-             radial-gradient(ellipse 60% 40% at 80% 50%,rgba(255,60,172,0.08),transparent),
-             radial-gradient(ellipse 60% 40% at 20% 60%,rgba(45,156,255,0.07),transparent)}
-.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;
-  max-width:1100px;width:100%;align-items:center}
-.hero-left{text-align:left}
+/* HERO */
+.hero{min-height:100vh;display:grid;place-items:center;
+  padding:110px 40px 60px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%,rgba(155,89,255,0.14),transparent),
+    radial-gradient(ellipse 50% 40% at 85% 40%,rgba(255,60,172,0.09),transparent),
+    radial-gradient(ellipse 50% 40% at 15% 60%,rgba(45,156,255,0.07),transparent)}
+#starCanvas{position:absolute;inset:0;pointer-events:none}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:64px;
+  max-width:1160px;width:100%;align-items:center;position:relative;z-index:1}
+
+/* hero left */
 .hero-tag{display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,60,172,0.1);border:1px solid rgba(255,60,172,0.25);
+  background:rgba(255,60,172,0.1);border:1px solid rgba(255,60,172,0.22);
   border-radius:100px;padding:6px 16px;font-size:0.74rem;font-weight:700;
-  color:var(--neon);margin-bottom:24px;letter-spacing:0.04em}
-.hero-title{font-family:var(--fh);font-size:clamp(2.2rem,4.5vw,3.6rem);
-  font-weight:900;line-height:1.08;letter-spacing:-0.03em;margin-bottom:20px}
-.hero-title .gr{background:linear-gradient(135deg,var(--neon),var(--purple),var(--blue));
+  color:var(--neon);margin-bottom:22px;letter-spacing:0.04em}
+.hero-h1{font-family:var(--fh);font-size:clamp(2.2rem,4vw,3.5rem);
+  font-weight:900;line-height:1.08;letter-spacing:-0.03em;margin-bottom:18px}
+.hero-h1 .gr{background:linear-gradient(135deg,var(--neon),var(--purple),var(--blue));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{font-size:1.05rem;color:rgba(255,255,255,0.55);line-height:1.7;
-  margin-bottom:36px;max-width:460px}
-.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
-.btn-big{padding:15px 30px;border-radius:100px;font-family:var(--fh);
-  font-size:0.92rem;font-weight:700;text-decoration:none;transition:all 0.25s;
+.hero-p{font-size:1.05rem;color:rgba(255,255,255,0.5);line-height:1.7;
+  margin-bottom:34px;max-width:460px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.btn{padding:14px 28px;border-radius:100px;font-family:var(--fh);font-size:0.9rem;
+  font-weight:700;text-decoration:none;transition:all 0.25s;
   display:inline-flex;align-items:center;gap:8px;-webkit-tap-highlight-color:transparent}
 .btn-p{background:linear-gradient(135deg,var(--neon),#c4007a);color:#fff;
   box-shadow:0 0 32px rgba(255,60,172,0.3)}
 .btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 40px rgba(255,60,172,0.45)}
-.btn-s{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);color:#fff}
-.btn-s:hover{background:rgba(255,255,255,0.12);transform:translateY(-1px)}
-.hero-stats{display:flex;gap:32px;margin-top:40px}
-.hstat{display:flex;flex-direction:column;gap:3px}
-.hstat-num{font-family:var(--fh);font-size:1.6rem;font-weight:900;
-  background:linear-gradient(135deg,var(--yellow),var(--neon));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hstat-lbl{font-size:0.72rem;color:rgba(255,255,255,0.4);font-weight:600}
-
-/* ── PHONE ANIMATION ── */
-.hero-right{display:flex;justify-content:center;align-items:center;position:relative}
-.phone-wrap{position:relative;width:260px}
-.phone-outer{background:linear-gradient(145deg,#1a1630,#0a0818);
-  border:1.5px solid rgba(255,255,255,0.1);border-radius:38px;
-  padding:12px;box-shadow:0 40px 80px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(255,255,255,0.04),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  position:relative;overflow:hidden;height:520px}
-.phone-notch{width:60px;height:6px;background:rgba(255,255,255,0.08);
-  border-radius:100px;margin:0 auto 10px}
-.phone-screen{background:#04050e;border-radius:28px;overflow:hidden;padding:14px;height:100%;display:flex;flex-direction:column}
-
-/* карта внутри телефона */
-.p-card{background:linear-gradient(145deg,#18104a,#0c1540,#1e0a2a);
-  border:1px solid rgba(155,89,255,0.25);border-radius:16px;padding:14px;
-  margin-bottom:10px;position:relative;overflow:hidden}
-.p-card-glow{position:absolute;top:-30px;right:-30px;width:100px;height:100px;
-  background:radial-gradient(circle,rgba(255,60,172,0.2),transparent 70%);pointer-events:none}
-.p-logo{font-size:0.62rem;font-weight:900;
-  background:linear-gradient(135deg,var(--neon),var(--blue));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
-.p-lbl{font-size:0.48rem;text-transform:uppercase;letter-spacing:0.1em;
-  color:rgba(255,255,255,0.35);margin-bottom:2px}
-.p-stars{font-family:var(--fh);font-size:2rem;font-weight:900;line-height:1;
+.btn-s{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);color:#fff}
+.btn-s:hover{background:rgba(255,255,255,0.11);transform:translateY(-1px)}
+.hero-nums{display:flex;gap:36px}
+.hn-val{font-family:var(--fh);font-size:1.8rem;font-weight:900;
   background:linear-gradient(135deg,var(--yellow),var(--neon));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:2px;display:flex;align-items:baseline;gap:4px}
-.p-stars-badge{font-size:0.55rem;background:rgba(6,214,160,0.15);
-  border:1px solid rgba(6,214,160,0.3);color:#06d6a0;
-  border-radius:100px;padding:2px 7px;font-weight:700;white-space:nowrap}
-.p-sub{font-size:0.5rem;color:rgba(255,255,255,0.35);margin-bottom:8px}
-.p-bar{height:4px;background:rgba(255,255,255,0.07);border-radius:100px;overflow:hidden;margin-bottom:4px}
-.p-fill{height:100%;border-radius:100px;
-  background:linear-gradient(90deg,var(--neon),var(--purple),var(--blue));
-  transition:width 0.8s cubic-bezier(.22,1,.36,1)}
-.p-bar-row{display:flex;justify-content:space-between;font-size:0.42rem;
-  color:rgba(255,255,255,0.25);margin-bottom:10px}
-.p-bottom{display:flex;justify-content:space-between;align-items:flex-end}
-.p-name{font-size:0.62rem;font-weight:700}
-.p-since{font-size:0.44rem;color:rgba(255,255,255,0.3)}
-.p-vis{text-align:right;font-size:0.44rem;color:rgba(255,255,255,0.3)}
-.p-vis strong{display:block;font-size:0.8rem;font-weight:900;color:#fff}
+  display:block;line-height:1}
+.hn-lbl{font-size:0.7rem;color:rgba(255,255,255,0.35);font-weight:600;
+  display:block;margin-top:4px}
 
-.p-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px}
-.p-act{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
-  border-radius:9px;padding:7px 3px;text-align:center;font-size:0.75rem}
-.p-act-lbl{font-size:0.38rem;color:rgba(255,255,255,0.3);margin-top:2px;font-weight:700}
+/* ── PHONE SWITCHER ── */
+.phone-side{display:flex;flex-direction:column;align-items:center;gap:24px}
 
-.p-tabs{display:flex;background:rgba(255,255,255,0.04);border-radius:8px;
-  overflow:hidden;margin-bottom:8px}
-.p-tab{flex:1;padding:5px 3px;text-align:center;font-size:0.44rem;
-  font-weight:700;color:rgba(255,255,255,0.3)}
-.p-tab.on{background:rgba(255,60,172,0.1);color:var(--neon)}
+/* переключатель ролей */
+.role-switch{display:flex;background:rgba(255,255,255,0.05);
+  border:1px solid var(--bd);border-radius:100px;padding:4px;gap:2px}
+.rs-btn{padding:8px 18px;border-radius:100px;border:none;background:none;
+  color:rgba(255,255,255,0.45);font-family:var(--fb);font-size:0.76rem;
+  font-weight:700;cursor:pointer;transition:all 0.25s;-webkit-tap-highlight-color:transparent;
+  white-space:nowrap}
+.rs-btn.on{color:#fff;box-shadow:0 2px 12px rgba(0,0,0,0.3)}
+.rs-btn.guest.on{background:linear-gradient(135deg,#9b59ff,#6b2fff)}
+.rs-btn.cashier.on{background:linear-gradient(135deg,#1a7de8,#0d5bbf)}
+.rs-btn.director.on{background:linear-gradient(135deg,#ff3cac,#c4007a)}
 
-.p-hist{display:flex;flex-direction:column;gap:5px;overflow:hidden;max-height:130px;flex-shrink:0}
-.p-hi{display:flex;align-items:center;gap:6px;
+/* телефон */
+.phone-frame{width:240px;position:relative;
+  filter:drop-shadow(0 40px 80px rgba(0,0,0,0.7))}
+.phone-body{background:linear-gradient(160deg,#1c1828,#0a0814);
+  border:1.5px solid rgba(255,255,255,0.1);border-radius:36px;
+  overflow:hidden;height:490px;position:relative;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07)}
+.phone-notch{width:54px;height:5px;background:rgba(255,255,255,0.07);
+  border-radius:100px;margin:10px auto 8px}
+
+/* экраны */
+.pscreen{position:absolute;inset:0;padding:10px 10px 12px;
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateX(18px);
+  transition:all 0.38s cubic-bezier(.22,1,.36,1);pointer-events:none}
+.pscreen.on{opacity:1;transform:none;pointer-events:all}
+.pscreen.out{opacity:0;transform:translateX(-18px)}
+
+/* общие мини-элементы */
+.ph{font-size:0.58rem;font-weight:900;
+  background:linear-gradient(135deg,var(--neon),var(--blue));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:6px;display:block}
+.pm-card{border-radius:13px;padding:11px;margin-bottom:6px}
+.pm-lbl{font-size:0.38rem;text-transform:uppercase;letter-spacing:0.1em;
+  color:rgba(255,255,255,0.3);margin-bottom:1px}
+.pm-val{font-family:var(--fh);font-weight:900;line-height:1}
+.pm-bar{height:3px;background:rgba(255,255,255,0.07);border-radius:100px;
+  overflow:hidden;margin:6px 0 3px}
+.pm-fill{height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--neon),var(--blue))}
+.pm-row{display:flex;justify-content:space-between;
+  font-size:0.38rem;color:rgba(255,255,255,0.25);margin-bottom:8px}
+.pm-bottom{display:flex;justify-content:space-between;align-items:flex-end}
+.pm-name{font-size:0.55rem;font-weight:700}
+.pm-vis{font-size:0.38rem;color:rgba(255,255,255,0.3);text-align:right}
+.pm-vis strong{display:block;font-size:0.7rem;font-weight:900;color:#eef2ff}
+
+.pm-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}
+.pm-act{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:8px;padding:6px 2px;text-align:center;font-size:0.7rem}
+.pm-act-l{font-size:0.35rem;color:rgba(255,255,255,0.28);margin-top:1px;font-weight:700}
+
+.pm-tabs{display:flex;background:rgba(255,255,255,0.04);
+  border-radius:7px;overflow:hidden;margin-bottom:6px}
+.pm-tab{flex:1;padding:4px 2px;text-align:center;font-size:0.38rem;
+  font-weight:700;color:rgba(255,255,255,0.28)}
+.pm-tab.on{background:rgba(255,60,172,0.1);color:var(--neon)}
+
+.pm-hist{display:flex;flex-direction:column;gap:4px}
+.pm-hi{display:flex;align-items:center;gap:5px;
   background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);
-  border-radius:8px;padding:7px 9px}
-.p-hi-ico{width:22px;height:22px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:0.65rem;flex-shrink:0}
-.p-hi-ico.p{background:rgba(6,214,160,0.12)}
-.p-hi-ico.m{background:rgba(255,60,172,0.1)}
-.p-hi-info{flex:1}
-.p-hi-action{font-size:0.5rem;font-weight:700}
-.p-hi-date{font-size:0.42rem;color:rgba(255,255,255,0.25);margin-top:1px}
-.p-hi-pts{font-size:0.52rem;font-weight:700;flex-shrink:0}
-.p-hi-pts.p{color:var(--green)} .p-hi-pts.m{color:var(--neon)}
+  border-radius:7px;padding:5px 7px}
+.pm-hi-ico{width:18px;height:18px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:0.55rem}
+.pm-hi-ico.p{background:rgba(6,214,160,0.12)}
+.pm-hi-ico.m{background:rgba(255,60,172,0.1)}
+.pm-hi-info{flex:1;min-width:0}
+.pm-hi-a{font-size:0.44rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pm-hi-d{font-size:0.38rem;color:rgba(255,255,255,0.25)}
+.pm-hi-p{font-size:0.46rem;font-weight:700;flex-shrink:0}
+.pm-hi-p.p{color:var(--green)}.pm-hi-p.m{color:var(--neon)}
 
-/* floating badges вокруг телефона */
-.float-badge{position:absolute;background:var(--card2);
-  border:1px solid rgba(255,255,255,0.1);border-radius:14px;
-  padding:10px 14px;font-size:0.75rem;font-weight:700;
-  box-shadow:0 8px 24px rgba(0,0,0,0.4);white-space:nowrap;
-  animation:fbFloat 3s ease-in-out infinite}
-.fb1{left:-90px;top:60px;animation-delay:0s}
-.fb2{right:-80px;top:120px;animation-delay:1s}
-.fb3{left:-70px;bottom:100px;animation-delay:2s}
-@keyframes fbFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+/* кассир */
+.pm-search{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;padding:6px 9px;font-size:0.46rem;color:rgba(255,255,255,0.4);
+  margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.pm-guest-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);
+  border-radius:10px;padding:8px;margin-bottom:6px}
+.pm-gc-top{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.pm-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--neon),var(--purple));
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.5rem;font-weight:700;color:#fff}
+.pm-gc-name{font-size:0.52rem;font-weight:700}
+.pm-gc-phone{font-size:0.42rem;color:rgba(255,255,255,0.35)}
+.pm-gc-stars{font-size:0.44rem;color:var(--yellow);margin-top:1px}
+.pm-gc-btn{width:100%;padding:5px;border-radius:100px;border:none;
+  background:linear-gradient(135deg,var(--green),#04a07a);
+  color:#fff;font-size:0.46rem;font-weight:700;text-align:center}
 
-/* glow orbs */
-.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(60px)}
-.orb1{width:300px;height:300px;background:rgba(255,60,172,0.12);top:-80px;right:-80px}
-.orb2{width:250px;height:250px;background:rgba(45,156,255,0.1);bottom:-60px;left:-60px}
-.orb3{width:200px;height:200px;background:rgba(155,89,255,0.1);top:50%;right:-40px}
+/* директор */
+.pm-stats{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:6px}
+.pm-stat{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  border-radius:9px;padding:7px;text-align:center}
+.pm-stat-n{font-family:var(--fh);font-size:1rem;font-weight:900;line-height:1}
+.pm-stat-l{font-size:0.38rem;color:rgba(255,255,255,0.3);margin-top:2px;font-weight:700}
+.pm-ann{background:linear-gradient(135deg,rgba(255,60,172,0.07),rgba(45,156,255,0.04));
+  border:1px solid rgba(255,60,172,0.13);border-radius:9px;padding:7px;margin-bottom:5px}
+.pm-ann-t{font-size:0.48rem;font-weight:700;margin-bottom:2px}
+.pm-ann-b{font-size:0.42rem;color:rgba(255,255,255,0.3)}
 
-/* летящие звёзды (canvas) */
-#starCanvas{position:absolute;inset:0;pointer-events:none;z-index:0}
+/* glow под телефоном */
+.phone-glow{width:180px;height:20px;
+  background:radial-gradient(ellipse,rgba(255,60,172,0.2),transparent 70%);
+  filter:blur(12px);margin:0 auto;transition:all 0.3s}
+
+/* описание роли */
+.role-desc{text-align:center;max-width:280px}
+.rd-title{font-family:var(--fh);font-size:0.9rem;font-weight:800;margin-bottom:5px}
+.rd-sub{font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.5}
+
+/* floating badges */
+.fb{position:absolute;background:var(--card2);border:1px solid var(--bd2);
+  border-radius:12px;padding:8px 12px;font-size:0.7rem;font-weight:700;
+  box-shadow:0 8px 24px rgba(0,0,0,0.4);white-space:nowrap;pointer-events:none;
+  animation:fbfl 3s ease-in-out infinite}
+.fb1{left:-110px;top:80px;animation-delay:0s}
+.fb2{right:-100px;top:150px;animation-delay:1.2s}
+.fb3{left:-90px;bottom:120px;animation-delay:2.4s}
+@keyframes fbfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* ── LIGHT SECTIONS ── */
-.light{background:var(--light);color:var(--dark)}
-.light-section{background:var(--light);padding:80px 24px}
-.sec-max{max-width:1100px;margin:0 auto}
-.sec-tag{display:inline-block;
-  background:rgba(224,0,110,0.08);border:1px solid rgba(224,0,110,0.18);
-  border-radius:100px;padding:5px 16px;font-size:0.72rem;font-weight:800;
-  color:#e0006e;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
-.sec-title{font-family:var(--fh);font-size:clamp(1.6rem,3.5vw,2.4rem);
-  font-weight:900;line-height:1.18;letter-spacing:-0.025em;
-  margin-bottom:12px;color:var(--dark)}
-.sec-sub{font-size:1rem;color:var(--muted2);line-height:1.65;max-width:560px}
+.ls{background:var(--light);color:var(--dark);padding:80px 40px}
+.ds{background:var(--bg);padding:80px 40px;
+  background-image:radial-gradient(ellipse 70% 40% at 50% 0%,rgba(155,89,255,0.07),transparent)}
+.wrap{max-width:1120px;margin:0 auto}
+.stag{display:inline-block;background:rgba(224,0,110,0.08);
+  border:1px solid rgba(224,0,110,0.18);border-radius:100px;
+  padding:5px 16px;font-size:0.71rem;font-weight:800;color:#e0006e;
+  letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px}
+.stag.dk{background:rgba(255,60,172,0.1);border-color:rgba(255,60,172,0.22);color:var(--neon)}
+.stit{font-family:var(--fh);font-size:clamp(1.6rem,3.2vw,2.3rem);font-weight:900;
+  line-height:1.18;letter-spacing:-0.025em;margin-bottom:12px}
+.stit.dk{color:#eef2ff}
+.ssub{font-size:0.98rem;color:var(--muted2);line-height:1.65;max-width:560px}
+.ssub.dk{color:rgba(255,255,255,0.42)}
+
+/* HOW IT WORKS — визуальные шаги */
+.how-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:52px;position:relative}
+.how-line{position:absolute;top:32px;left:12.5%;right:12.5%;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(224,0,110,0.35),rgba(45,156,255,0.35),transparent)}
+.how-step{text-align:center;padding:0 12px;position:relative}
+.how-num{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:1}
+.how-ico{font-size:1.8rem}
+.how-ring{position:absolute;inset:-4px;border-radius:50%;border:1.5px solid;opacity:0.3}
+.how-title{font-family:var(--fh);font-size:0.92rem;font-weight:800;
+  margin-bottom:7px;color:var(--dark)}
+.how-desc{font-size:0.8rem;color:var(--muted2);line-height:1.6}
 
 /* PAIN */
-.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:16px;margin-top:40px}
-.pain-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;
-  padding:24px;box-shadow:0 2px 16px rgba(0,0,0,0.05);transition:all 0.25s}
-.pain-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
-.pain-icon{font-size:2.2rem;margin-bottom:12px;display:block}
-.pain-title{font-family:var(--fh);font-size:0.95rem;font-weight:800;
-  margin-bottom:7px;color:var(--dark)}
-.pain-desc{font-size:0.83rem;color:var(--muted2);line-height:1.6}
-
-/* HOW IT WORKS — горизонтальный флоу */
-.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:0;margin-top:48px;position:relative}
-.how-grid::before{content:'';position:absolute;top:28px;left:10%;right:10%;
-  height:1px;background:linear-gradient(90deg,transparent,rgba(224,0,110,0.3),rgba(45,156,255,0.3),transparent);
-  pointer-events:none}
-.how-step{text-align:center;padding:0 16px;position:relative}
-.how-num{width:56px;height:56px;border-radius:50%;
-  background:linear-gradient(135deg,var(--neon),#c4007a);
-  color:#fff;font-family:var(--fh);font-size:1.1rem;font-weight:900;
-  display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
-  box-shadow:0 8px 20px rgba(224,0,110,0.3)}
-.how-title{font-family:var(--fh);font-size:0.9rem;font-weight:800;
+.pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;margin-top:40px}
+.pain-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:18px;
+  padding:22px;box-shadow:0 2px 14px rgba(0,0,0,0.05);transition:all 0.25s}
+.pain-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.1)}
+.pain-ico{font-size:2rem;display:block;margin-bottom:11px}
+.pain-title{font-family:var(--fh);font-size:0.93rem;font-weight:800;
   margin-bottom:6px;color:var(--dark)}
-.how-desc{font-size:0.8rem;color:var(--muted2);line-height:1.55}
+.pain-desc{font-size:0.81rem;color:var(--muted2);line-height:1.6}
 
 /* FEATURES */
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-  gap:16px;margin-top:40px}
-.feat-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;
-  padding:26px;box-shadow:0 2px 12px rgba(0,0,0,0.05);transition:all 0.25s}
-.feat-card:hover{transform:translateY(-3px);box-shadow:0 8px 32px rgba(0,0,0,0.1)}
-.feat-card.hl{border-color:rgba(224,0,110,0.2);
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:14px;margin-top:40px}
+.feat-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:18px;
+  padding:24px;box-shadow:0 2px 12px rgba(0,0,0,0.05);transition:all 0.25s}
+.feat-card:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,0,0,0.1)}
+.feat-card.hl{border-color:rgba(224,0,110,0.18);
   background:linear-gradient(145deg,rgba(224,0,110,0.03),#fff)}
-.feat-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
-.feat-ico{width:46px;height:46px;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
-.feat-role-lbl{font-size:0.68rem;font-weight:800;letter-spacing:0.06em;margin-bottom:3px}
-.feat-role-name{font-family:var(--fh);font-size:0.95rem;font-weight:900;color:var(--dark)}
-.feat-list{display:flex;flex-direction:column;gap:9px}
-.feat-item{display:flex;align-items:flex-start;gap:10px;
-  font-size:0.82rem;color:var(--muted2);line-height:1.5}
-.feat-check{flex-shrink:0;margin-top:1px;font-size:0.85rem}
+.feat-head{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.feat-ico{width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.feat-rlbl{font-size:0.67rem;font-weight:800;letter-spacing:0.06em;margin-bottom:2px}
+.feat-rname{font-family:var(--fh);font-size:0.93rem;font-weight:900;color:var(--dark)}
+.feat-list{display:flex;flex-direction:column;gap:8px}
+.feat-item{display:flex;align-items:flex-start;gap:9px;
+  font-size:0.81rem;color:var(--muted2);line-height:1.5}
+.fc{flex-shrink:0;margin-top:1px;font-size:0.8rem}
+.feat-note{margin-top:14px;padding:9px 11px;
+  background:rgba(0,0,0,0.03);border:1px solid rgba(0,0,0,0.07);
+  border-radius:9px;font-size:0.74rem;color:var(--muted);line-height:1.5}
 
-/* ROLES DEMO */
-.dark-section{background:var(--bg);padding:80px 24px;
-  background-image:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(155,89,255,0.08),transparent)}
-.roles-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-  gap:16px;margin-top:40px}
-.role-card{background:var(--card);border:1px solid var(--bdark);border-radius:20px;
-  padding:24px;text-align:center;transition:all 0.3s;cursor:pointer}
-.role-card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,0.14)}
-.rc-icon{font-size:2.8rem;margin-bottom:12px;display:block}
-.rc-badge{display:inline-block;padding:4px 14px;border-radius:100px;
-  font-size:0.68rem;font-weight:800;margin-bottom:12px;border:1px solid}
-.rc-name{font-family:var(--fh);font-size:0.95rem;font-weight:900;
-  color:#eef2ff;margin-bottom:8px}
-.rc-desc{font-size:0.78rem;color:rgba(255,255,255,0.4);line-height:1.6;margin-bottom:14px}
-.rc-pass-wrap{display:flex;align-items:center;justify-content:center;gap:8px}
-.rc-pass-lbl{font-size:0.66rem;color:rgba(255,255,255,0.3);font-weight:600}
-.rc-pass{font-family:monospace;font-size:1.1rem;font-weight:700;
-  letter-spacing:0.12em;padding:7px 18px;
-  background:rgba(255,255,255,0.06);border-radius:100px;
-  border:1px solid rgba(255,255,255,0.1)}
+/* ROLES */
+.roles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:40px}
+.role-card{background:var(--card);border:1px solid var(--bd);border-radius:18px;
+  padding:22px;text-align:center;transition:all 0.3s;cursor:pointer}
+.role-card:hover{transform:translateY(-4px);border-color:var(--bd2)}
+.role-ico{font-size:2.6rem;display:block;margin-bottom:10px}
+.role-badge{display:inline-block;padding:3px 13px;border-radius:100px;
+  font-size:0.67rem;font-weight:800;margin-bottom:10px;border:1px solid}
+.role-name{font-family:var(--fh);font-size:0.92rem;font-weight:900;
+  color:#eef2ff;margin-bottom:7px}
+.role-desc{font-size:0.77rem;color:rgba(255,255,255,0.38);line-height:1.6;margin-bottom:14px}
+.role-pass{display:flex;align-items:center;justify-content:center;gap:8px}
+.rp-lbl{font-size:0.64rem;color:rgba(255,255,255,0.28);font-weight:600}
+.rp-val{font-family:monospace;font-size:1.05rem;font-weight:700;
+  letter-spacing:0.1em;padding:6px 16px;
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);
+  border-radius:100px}
 
-/* DEMO CTA STRIP */
-.cta-strip{background:linear-gradient(135deg,#1a0630,#0a1040,#0a2040);
-  border-radius:24px;padding:48px 40px;text-align:center;
-  border:1px solid rgba(255,255,255,0.08);margin-top:48px;position:relative;overflow:hidden}
+/* CTA STRIP */
+.cta-strip{background:linear-gradient(135deg,#150828,#09122a,#091e40);
+  border:1px solid rgba(255,255,255,0.08);border-radius:22px;
+  padding:48px 40px;text-align:center;margin-top:44px;position:relative;overflow:hidden}
 .cta-strip::before{content:'';position:absolute;inset:0;
-  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(155,89,255,0.12),transparent);
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(155,89,255,0.1),transparent);
   pointer-events:none}
-.cta-strip-title{font-family:var(--fh);font-size:clamp(1.4rem,3vw,2rem);
-  font-weight:900;margin-bottom:10px;position:relative}
-.cta-strip-sub{font-size:0.92rem;color:rgba(255,255,255,0.5);
-  margin-bottom:28px;position:relative}
-.cta-strip-btns{display:flex;gap:12px;justify-content:center;
-  flex-wrap:wrap;position:relative}
+.cta-strip h3{font-family:var(--fh);font-size:clamp(1.3rem,2.5vw,1.9rem);
+  font-weight:900;margin-bottom:8px;position:relative}
+.cta-strip p{font-size:0.92rem;color:rgba(255,255,255,0.45);
+  margin-bottom:26px;position:relative}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+
+/* FAQ */
+.faq-list{margin-top:40px;display:flex;flex-direction:column;gap:10px}
+.faq-item{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;overflow:hidden;
+  box-shadow:0 1px 8px rgba(0,0,0,0.04)}
+.faq-q{width:100%;padding:16px 20px;background:none;border:none;
+  display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;font-family:var(--fh);font-size:0.9rem;font-weight:700;
+  color:var(--dark);text-align:left;-webkit-tap-highlight-color:transparent}
+.faq-arrow{font-size:0.8rem;color:var(--muted);transition:transform 0.28s;flex-shrink:0}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.38s cubic-bezier(.22,1,.36,1)}
+.faq-item.open .faq-a{max-height:300px}
+.faq-a-inner{padding:0 20px 16px;font-size:0.84rem;color:var(--muted2);line-height:1.7}
 
 /* CONTACTS */
 .contacts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-  gap:16px;margin-top:40px}
-.contact-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:20px;
-  padding:28px;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
-.cc-role{font-size:0.68rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;
+  gap:14px;margin-top:40px}
+.cc{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:18px;
+  padding:26px;box-shadow:0 2px 12px rgba(0,0,0,0.05)}
+.cc-role{font-size:0.67rem;font-weight:800;letter-spacing:0.09em;text-transform:uppercase;
   color:var(--muted);margin-bottom:8px}
 .cc-name{font-family:var(--fh);font-size:1.05rem;font-weight:900;
-  color:var(--dark);margin-bottom:4px}
-.cc-title{font-size:0.8rem;color:var(--muted2);margin-bottom:16px;line-height:1.5}
-.cc-links{display:flex;flex-direction:column;gap:8px}
-.cc-link{display:flex;align-items:center;gap:10px;font-size:0.82rem;
-  color:var(--muted2);text-decoration:none;transition:color 0.2s;
-  padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:10px}
-.cc-link:hover{color:var(--dark);background:rgba(0,0,0,0.06)}
-.cc-link-ico{font-size:1.1rem;flex-shrink:0}
+  color:var(--dark);margin-bottom:3px}
+.cc-sub{font-size:0.8rem;color:var(--muted2);margin-bottom:14px;line-height:1.5}
+.cc-links{display:flex;flex-direction:column;gap:7px}
+.cc-link{display:flex;align-items:center;gap:9px;font-size:0.81rem;
+  color:var(--muted2);text-decoration:none;
+  padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:9px;transition:all 0.2s}
+.cc-link:hover{color:var(--dark);background:rgba(0,0,0,0.07)}
 
 /* FOOTER */
-footer{background:var(--bg);border-top:1px solid var(--bdark);
-  padding:24px;text-align:center;font-size:0.76rem;color:rgba(255,255,255,0.25)}
-footer a{color:rgba(255,255,255,0.4);text-decoration:none}
+footer{background:var(--bg);border-top:1px solid var(--bd);
+  padding:22px;text-align:center;font-size:0.75rem;color:rgba(255,255,255,0.22)}
+footer a{color:rgba(255,255,255,0.38);text-decoration:none}
 footer a:hover{color:#fff}
 
-/* DIVIDER */
-.divider{height:1px;background:rgba(0,0,0,0.07)}
+/* REVEAL */
+.rv{opacity:0;transform:translateY(22px);transition:all 0.6s cubic-bezier(.22,1,.36,1)}
+.rv.on{opacity:1;transform:none}
 
-/* SCROLL REVEAL */
-.reveal{opacity:0;transform:translateY(24px);transition:all 0.6s cubic-bezier(.22,1,.36,1)}
-.reveal.on{opacity:1;transform:none}
+/* MOBILE FLOAT BTN */
+.mob-cta{position:fixed;bottom:20px;right:20px;z-index:200;display:none;
+  padding:13px 22px;border-radius:100px;background:linear-gradient(135deg,var(--neon),#c4007a);
+  color:#fff;font-family:var(--fh);font-size:0.82rem;font-weight:700;
+  text-decoration:none;box-shadow:0 8px 24px rgba(255,60,172,0.4);
+  -webkit-tap-highlight-color:transparent}
 
-@media(max-width:900px){
-  .hero-grid{grid-template-columns:1fr;gap:40px;text-align:center}
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr;gap:48px;text-align:center}
   .hero-left{display:flex;flex-direction:column;align-items:center}
-  .hero-sub{text-align:center}
-  .hero-stats{justify-content:center}
+  .hero-p{text-align:center}
+  .hero-nums{justify-content:center}
   .nav-links{display:none}
-  .float-badge{display:none}
-  .how-grid::before{display:none}
+  .fb{display:none}
+  .how-grid{grid-template-columns:1fr 1fr;gap:28px}
+  .how-line{display:none}
+  .roles-grid{grid-template-columns:1fr}
 }
 @media(max-width:600px){
   .hero{padding:80px 20px 48px}
-  .light-section,.dark-section{padding:56px 20px}
-  .phone-wrap{width:220px}
-  .cta-strip{padding:32px 20px}
-  .hero-cta{flex-direction:column;width:100%}
-  .btn-big{justify-content:center}
+  .ls,.ds{padding:52px 20px}
+  .phone-frame{width:210px}
+  .phone-body{height:430px}
+  .hero-btns{flex-direction:column;width:100%}
+  .btn{justify-content:center}
+  .cta-strip{padding:28px 20px}
+  .mob-cta{display:flex}
+  .nc-o{display:none}
 }
 </style>
 </head>
@@ -317,358 +378,437 @@ footer a:hover{color:#fff}
   <div class="nav-links">
     <a href="#how" class="nav-link">Как работает</a>
     <a href="#features" class="nav-link">Возможности</a>
-    <a href="#roles" class="nav-link">Роли</a>
+    <a href="#faq" class="nav-link">FAQ</a>
     <a href="#contacts" class="nav-link">Контакты</a>
   </div>
-  <div class="nav-btns">
-    <a href="demo-loyalty.html" class="nb nb-out">Карта гостя</a>
-    <a href="demo-admin.html" class="nb nb-fill">Панель →</a>
+  <div class="nav-cta">
+    <a href="demo-loyalty.html" class="nc nc-o">Карта гостя</a>
+    <a href="demo-admin.html" class="nc nc-f">Панель →</a>
   </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <canvas id="starCanvas"></canvas>
+  <div class="hero-inner">
 
-  <div class="hero-grid">
     <!-- LEFT -->
-    <div class="hero-left reveal">
+    <div class="hero-left rv">
       <div class="hero-tag">🎡 Для парков развлечений</div>
-      <h1 class="hero-title">Гости будут<br>возвращаться<br><span class="gr">снова и снова</span></h1>
-      <p class="hero-sub">StarPass — цифровая карта лояльности и панель управления для всей команды. Никаких бумажных штампов. Всё в телефоне.</p>
-      <div class="hero-cta">
-        <a href="demo-loyalty.html" class="btn-big btn-p">⭐ Открыть карту гостя</a>
-        <a href="demo-admin.html" class="btn-big btn-s">⚙️ Панель персонала</a>
+      <h1 class="hero-h1">Гости будут<br>возвращаться<br><span class="gr">снова и снова</span></h1>
+      <p class="hero-p">StarPass — цифровая карта лояльности и панель управления для всей команды. Никаких бумажных штампов. Всё в телефоне.</p>
+      <div class="hero-btns">
+        <a href="demo-loyalty.html" class="btn btn-p">⭐ Открыть карту гостя</a>
+        <a href="demo-admin.html" class="btn btn-s">⚙️ Панель персонала</a>
       </div>
-      <div class="hero-stats">
-        <div class="hstat">
-          <div class="hstat-num" id="statVis">0</div>
-          <div class="hstat-lbl">визитов в демо</div>
-        </div>
-        <div class="hstat">
-          <div class="hstat-num" id="statStars">0</div>
-          <div class="hstat-lbl">★ начислено</div>
-        </div>
-        <div class="hstat">
-          <div class="hstat-num">3</div>
-          <div class="hstat-lbl">роли доступны</div>
-        </div>
+      <div class="hero-nums">
+        <div><span class="hn-val" id="n1">0</span><span class="hn-lbl">уровней лояльности</span></div>
+        <div><span class="hn-val" id="n2">0</span><span class="hn-lbl">роли персонала</span></div>
+        <div><span class="hn-val" id="n3">0</span><span class="hn-lbl">сек на регистрацию</span></div>
       </div>
     </div>
 
-    <!-- RIGHT — анимированный телефон -->
-    <div class="hero-right">
-      <div class="orb orb1"></div>
-      <div class="orb orb2"></div>
-      <div class="orb orb3"></div>
+    <!-- RIGHT — телефон с переключением -->
+    <div class="phone-side rv" style="transition-delay:0.1s">
 
-      <!-- floating badges -->
-      <div class="float-badge fb1">🎉 +100★ Визит начислен!</div>
-      <div class="float-badge fb2">🎂 День рождения Маши<br><span style="color:var(--green);font-size:0.68rem">+300★ Бонус ×3</span></div>
-      <div class="float-badge fb3">👑 Уровень повышен!<br><span style="color:var(--yellow);font-size:0.68rem">Космонавт 🚀</span></div>
+      <!-- switcher -->
+      <div class="role-switch">
+        <button class="rs-btn guest on" onclick="switchRole('guest')">⭐ Гость</button>
+        <button class="rs-btn cashier" onclick="switchRole('cashier')">🟢 Кассир</button>
+        <button class="rs-btn director" onclick="switchRole('director')">🔴 Директор</button>
+      </div>
 
-      <div class="phone-wrap" id="phoneWrap">
-        <div class="phone-outer">
+      <!-- телефон -->
+      <div class="phone-frame">
+        <!-- floating badges -->
+        <div class="fb fb1" id="fb1">🎉 +100★ Визит!</div>
+        <div class="fb fb2" id="fb2">🎂 ×3 ДР-бонус<br><span style="color:var(--green);font-size:0.62rem">+300★ начислено</span></div>
+        <div class="fb fb3" id="fb3">📊 Визитов сегодня: 12</div>
+
+        <div class="phone-body">
           <div class="phone-notch"></div>
-          <div class="phone-screen">
 
-            <!-- карта -->
-            <div class="p-card">
-              <div class="p-card-glow"></div>
-              <div class="p-logo">⭐ STARPASS</div>
-              <div class="p-lbl">Мои звёзды</div>
-              <div class="p-stars">
-                <span id="phoneStars">250</span>
-                <span class="p-stars-badge" id="phoneBadge" style="display:none">+100★</span>
+          <!-- ЭКРАН: ГОСТЬ -->
+          <div class="pscreen on" id="screen-guest">
+            <span class="ph">⭐ STARPASS</span>
+            <div class="pm-card" style="background:linear-gradient(145deg,#18104a,#0c1540,#1e0a2a);border:1px solid rgba(155,89,255,0.22)">
+              <div class="pm-lbl">Мои звёзды</div>
+              <div class="pm-val" style="font-size:1.9rem;background:linear-gradient(135deg,var(--yellow),var(--neon));-webkit-background-clip:text;-webkit-text-fill-color:transparent">
+                <span id="gs">350</span>
+                <span id="gb" style="display:none;font-size:0.5rem;background:rgba(6,214,160,0.15);border:1px solid rgba(6,214,160,0.3);color:#06d6a0;border-radius:100px;padding:2px 6px;vertical-align:middle;font-weight:700">+100★</span>
               </div>
-              <div class="p-sub" id="phoneSub">ещё 250★ до уровня Космонавт</div>
-              <div class="p-bar"><div class="p-fill" id="phoneBar" style="width:50%"></div></div>
-              <div class="p-bar-row"><span>Новичок</span><span>Космонавт 500★</span></div>
-              <div class="p-bottom">
-                <div><div class="p-name">Иванов Иван</div><div class="p-since">С 1 сент. 2024</div></div>
-                <div class="p-vis"><strong id="phoneVis">4</strong>визита</div>
-              </div>
-            </div>
-
-            <div class="p-actions">
-              <div class="p-act">📲<div class="p-act-lbl">QR</div></div>
-              <div class="p-act">🎁<div class="p-act-lbl">Бонусы</div></div>
-              <div class="p-act">🎂<div class="p-act-lbl">Дети</div></div>
-              <div class="p-act">🏠<div class="p-act-lbl">Сайт</div></div>
-            </div>
-
-            <div class="p-tabs">
-              <div class="p-tab">🏆 Уровни</div>
-              <div class="p-tab">🎁 Бонусы</div>
-              <div class="p-tab on">📋 История</div>
-            </div>
-
-            <div class="p-hist" id="phoneHist">
-              <div class="p-hi">
-                <div class="p-hi-ico p">⭐</div>
-                <div class="p-hi-info">
-                  <div class="p-hi-action">Визит в парк</div>
-                  <div class="p-hi-date">20 июн 2026 · Ольга</div>
-                </div>
-                <div class="p-hi-pts p">+100★</div>
-              </div>
-              <div class="p-hi">
-                <div class="p-hi-ico p">🎂</div>
-                <div class="p-hi-info">
-                  <div class="p-hi-action">Бонус ДР × Маша</div>
-                  <div class="p-hi-date">12 мар 2026 · Менеджер</div>
-                </div>
-                <div class="p-hi-pts p">+300★</div>
-              </div>
-              <div class="p-hi">
-                <div class="p-hi-ico m">🎟️</div>
-                <div class="p-hi-info">
-                  <div class="p-hi-action">Обмен на визит</div>
-                  <div class="p-hi-date">5 янв 2026 · Адм.</div>
-                </div>
-                <div class="p-hi-pts m">−350★</div>
+              <div style="font-size:0.42rem;color:rgba(255,255,255,0.3);margin-bottom:6px" id="gsub">ещё 150★ до Космонавта</div>
+              <div class="pm-bar"><div class="pm-fill" id="gbar" style="width:70%"></div></div>
+              <div class="pm-row"><span>Новичок 🛸</span><span>Космонавт 500★</span></div>
+              <div class="pm-bottom">
+                <div><div class="pm-name">Иванов Иван</div><div style="font-size:0.38rem;color:rgba(255,255,255,0.25)">С сент. 2024</div></div>
+                <div class="pm-vis"><strong id="gv">4</strong>визита</div>
               </div>
             </div>
-
+            <div class="pm-actions">
+              <div class="pm-act">📲<div class="pm-act-l">QR</div></div>
+              <div class="pm-act">🎁<div class="pm-act-l">Бонусы</div></div>
+              <div class="pm-act">🎂<div class="pm-act-l">Дети</div></div>
+              <div class="pm-act">🏠<div class="pm-act-l">Сайт</div></div>
+            </div>
+            <div class="pm-tabs">
+              <div class="pm-tab">🏆 Уровни</div>
+              <div class="pm-tab">🎁 Бонусы</div>
+              <div class="pm-tab on">📋 История</div>
+            </div>
+            <div class="pm-hist" id="ghist">
+              <div class="pm-hi"><div class="pm-hi-ico p">⭐</div><div class="pm-hi-info"><div class="pm-hi-a">Визит в парк</div><div class="pm-hi-d">20 июн · Ольга</div></div><div class="pm-hi-p p">+100★</div></div>
+              <div class="pm-hi"><div class="pm-hi-ico p">🎂</div><div class="pm-hi-info"><div class="pm-hi-a">Бонус ДР × Маша</div><div class="pm-hi-d">12 мар · Менеджер</div></div><div class="pm-hi-p p">+300★</div></div>
+              <div class="pm-hi"><div class="pm-hi-ico m">🎟️</div><div class="pm-hi-info"><div class="pm-hi-a">Обмен на визит</div><div class="pm-hi-d">5 янв · Адм.</div></div><div class="pm-hi-p m">−350★</div></div>
+            </div>
           </div>
-        </div>
+
+          <!-- ЭКРАН: КАССИР -->
+          <div class="pscreen" id="screen-cashier">
+            <span class="ph" style="background:linear-gradient(135deg,#2d9cff,#0d5bbf);-webkit-background-clip:text;-webkit-text-fill-color:transparent">⚙️ КАССИР · Ольга</span>
+            <div class="pm-search">🔍 <span>Поиск гостя...</span></div>
+            <div class="pm-guest-card">
+              <div class="pm-gc-top">
+                <div class="pm-av">ИИ</div>
+                <div>
+                  <div class="pm-gc-name">Иванов Иван</div>
+                  <div class="pm-gc-phone">+7 (900) 123-45-67</div>
+                  <div class="pm-gc-stars">⭐ 350★ · Новичок 🛸</div>
+                </div>
+              </div>
+              <div class="pm-gc-btn" id="cashBtn" onclick="doCashier()">+ 100★ Визит</div>
+            </div>
+            <div style="font-size:0.42rem;color:rgba(255,255,255,0.25);margin-bottom:6px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Последние операции</div>
+            <div class="pm-hist">
+              <div class="pm-hi"><div class="pm-hi-ico p">⭐</div><div class="pm-hi-info"><div class="pm-hi-a">Иванов Иван</div><div class="pm-hi-d">сегодня 14:22</div></div><div class="pm-hi-p p">+100★</div></div>
+              <div class="pm-hi"><div class="pm-hi-ico p">⭐</div><div class="pm-hi-info"><div class="pm-hi-a">Смирнова Анна</div><div class="pm-hi-d">сегодня 13:05</div></div><div class="pm-hi-p p">+100★</div></div>
+              <div class="pm-hi"><div class="pm-hi-ico p">🎟️</div><div class="pm-hi-info"><div class="pm-hi-a">Козлов Дмитрий</div><div class="pm-hi-d">сегодня 12:40</div></div><div class="pm-hi-p p">−1000★</div></div>
+            </div>
+          </div>
+
+          <!-- ЭКРАН: ДИРЕКТОР -->
+          <div class="pscreen" id="screen-director">
+            <span class="ph" style="background:linear-gradient(135deg,#ff3cac,#c4007a);-webkit-background-clip:text;-webkit-text-fill-color:transparent">📊 ДИРЕКТОР</span>
+            <div class="pm-stats">
+              <div class="pm-stat"><div class="pm-stat-n" style="color:var(--blue)" id="ds1">1</div><div class="pm-stat-l">Гостей</div></div>
+              <div class="pm-stat"><div class="pm-stat-n" style="color:var(--yellow)" id="ds2">350</div><div class="pm-stat-l">★ Выдано</div></div>
+              <div class="pm-stat"><div class="pm-stat-n" style="color:var(--green)" id="ds3">4</div><div class="pm-stat-l">Визитов</div></div>
+              <div class="pm-stat"><div class="pm-stat-n" style="color:var(--neon)">3</div><div class="pm-stat-l">Заявок</div></div>
+            </div>
+            <div style="font-size:0.42rem;color:rgba(255,255,255,0.25);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Топ гость</div>
+            <div class="pm-guest-card" style="margin-bottom:6px">
+              <div class="pm-gc-top">
+                <div class="pm-av">🥇</div>
+                <div>
+                  <div class="pm-gc-name">Иванов Иван</div>
+                  <div class="pm-gc-stars">⭐ <span id="ds-stars">350</span>★ · 4 визита</div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:0.42rem;color:rgba(255,255,255,0.25);margin-bottom:5px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Объявления</div>
+            <div class="pm-ann">
+              <div class="pm-ann-t">🎉 Летние каникулы — скидки!</div>
+              <div class="pm-ann-b">Видят гости в своей карте</div>
+            </div>
+          </div>
+
+        </div><!-- /phone-body -->
+        <div class="phone-glow" id="phoneGlow"></div>
+      </div><!-- /phone-frame -->
+
+      <!-- описание роли -->
+      <div class="role-desc" id="roleDesc">
+        <div class="rd-title" id="rdTitle">Карта лояльности гостя</div>
+        <div class="rd-sub" id="rdSub">Баланс, история, QR-код, уровни и бонусы — всё на одном экране</div>
       </div>
-    </div>
-  </div>
+
+    </div><!-- /phone-side -->
+  </div><!-- /hero-inner -->
 </section>
 
 <!-- HOW IT WORKS -->
-<div class="light-section" id="how">
-  <div class="sec-max">
-    <div class="sec-tag reveal">Как работает</div>
-    <h2 class="sec-title reveal">Просто. Быстро. Без установки.</h2>
-    <p class="sec-sub reveal">Гость открывает ссылку — карта уже в телефоне. Кассир ищет по имени — один тап и готово.</p>
+<div class="ls" id="how">
+  <div class="wrap">
+    <div class="stag rv">Как работает</div>
+    <h2 class="stit rv">Четыре шага — и система работает</h2>
+    <p class="ssub rv">Гость не скачивает приложение. Кассир не учится неделю. Директор видит всё с первого дня.</p>
     <div class="how-grid">
-      <div class="how-step reveal" style="transition-delay:0.05s">
-        <div class="how-num">1</div>
+      <div class="how-line"></div>
+      <div class="how-step rv" style="transition-delay:0.05s">
+        <div class="how-num" style="background:linear-gradient(135deg,rgba(255,60,172,0.12),rgba(155,89,255,0.08));border:1px solid rgba(255,60,172,0.2)">
+          <div class="how-ring" style="border-color:#ff3cac"></div>
+          <span class="how-ico">🔗</span>
+        </div>
+        <div class="how-title">Вы даёте ссылку</div>
+        <div class="how-desc">Гость получает ссылку при входе — через QR на стойке, в соцсетях или от кассира</div>
+      </div>
+      <div class="how-step rv" style="transition-delay:0.1s">
+        <div class="how-num" style="background:linear-gradient(135deg,rgba(45,156,255,0.12),rgba(45,156,255,0.06));border:1px solid rgba(45,156,255,0.2)">
+          <div class="how-ring" style="border-color:#2d9cff"></div>
+          <span class="how-ico">📝</span>
+        </div>
         <div class="how-title">Гость регистрируется</div>
-        <div class="how-desc">Открывает ссылку, вводит имя и телефон — карта готова за 10 секунд. Никакого приложения.</div>
+        <div class="how-desc">Имя и телефон — 10 секунд. Карта готова, никаких приложений и паролей</div>
       </div>
-      <div class="how-step reveal" style="transition-delay:0.1s">
-        <div class="how-num">2</div>
-        <div class="how-title">Показывает QR-код</div>
-        <div class="how-desc">При каждом визите гость открывает карту и показывает QR кассиру — быстро и без бумаги.</div>
-      </div>
-      <div class="how-step reveal" style="transition-delay:0.15s">
-        <div class="how-num">3</div>
+      <div class="how-step rv" style="transition-delay:0.15s">
+        <div class="how-num" style="background:linear-gradient(135deg,rgba(6,214,160,0.12),rgba(6,214,160,0.06));border:1px solid rgba(6,214,160,0.2)">
+          <div class="how-ring" style="border-color:#06d6a0"></div>
+          <span class="how-ico">⭐</span>
+        </div>
         <div class="how-title">Кассир начисляет</div>
-        <div class="how-desc">Находит гостя по имени или телефону, нажимает «+100★ Визит» — звёзды появляются мгновенно.</div>
+        <div class="how-desc">Находит гостя по имени, нажимает «+100★ Визит» — звёзды появляются мгновенно</div>
       </div>
-      <div class="how-step reveal" style="transition-delay:0.2s">
-        <div class="how-num">4</div>
-        <div class="how-title">Гость накапливает</div>
-        <div class="how-desc">Копит звёзды, растёт по уровням, получает привилегии — и возвращается снова.</div>
+      <div class="how-step rv" style="transition-delay:0.2s">
+        <div class="how-num" style="background:linear-gradient(135deg,rgba(255,209,102,0.12),rgba(255,209,102,0.06));border:1px solid rgba(255,209,102,0.2)">
+          <div class="how-ring" style="border-color:#ffd166"></div>
+          <span class="how-ico">🏆</span>
+        </div>
+        <div class="how-title">Гость возвращается</div>
+        <div class="how-desc">Копит звёзды, растёт по уровням, получает привилегии — и снова приходит</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
 <!-- PAIN -->
-<div class="light-section">
-  <div class="sec-max">
-    <div class="sec-tag reveal">Проблема</div>
-    <h2 class="sec-title reveal">Почему гости не возвращаются?</h2>
-    <p class="sec-sub reveal">Разовые посетители — главная боль любого парка. Без системы лояльности каждый гость уходит навсегда.</p>
+<div style="height:1px;background:rgba(0,0,0,0.07)"></div>
+<div class="ls">
+  <div class="wrap">
+    <div class="stag rv">Проблема</div>
+    <h2 class="stit rv">Почему гости не возвращаются?</h2>
+    <p class="ssub rv">Разовые посетители — главная боль любого парка. Без системы лояльности каждый гость уходит навсегда.</p>
     <div class="pain-grid">
-      <div class="pain-card reveal" style="transition-delay:0.05s">
-        <span class="pain-icon">😕</span>
+      <div class="pain-card rv" style="transition-delay:0.05s">
+        <span class="pain-ico">😕</span>
         <div class="pain-title">Нет причины вернуться</div>
-        <div class="pain-desc">Посетил, заплатил, ушёл. Ничто не мотивирует прийти снова — ни бонусы, ни статус, ни история.</div>
+        <div class="pain-desc">Посетил, заплатил, ушёл. Ничто не мотивирует прийти снова — ни бонусы, ни статус.</div>
       </div>
-      <div class="pain-card reveal" style="transition-delay:0.1s">
-        <span class="pain-icon">📋</span>
+      <div class="pain-card rv" style="transition-delay:0.1s">
+        <span class="pain-ico">📋</span>
         <div class="pain-title">Бумажные штампы устарели</div>
         <div class="pain-desc">Карточки теряются, кассиры путаются, аналитики ноль. Это не работает в 2026 году.</div>
       </div>
-      <div class="pain-card reveal" style="transition-delay:0.15s">
-        <span class="pain-icon">📊</span>
-        <div class="pain-title">Директор не видит картины</div>
-        <div class="pain-desc">Кто ходит чаще всего? Сколько визитов за месяц? Без цифр — нет управления, нет роста.</div>
+      <div class="pain-card rv" style="transition-delay:0.15s">
+        <span class="pain-ico">📊</span>
+        <div class="pain-title">Нет цифр — нет управления</div>
+        <div class="pain-desc">Кто ходит чаще? Сколько визитов в месяц? Без данных невозможно принимать решения.</div>
       </div>
-      <div class="pain-card reveal" style="transition-delay:0.2s">
-        <span class="pain-icon">🎂</span>
+      <div class="pain-card rv" style="transition-delay:0.2s">
+        <span class="pain-ico">🎂</span>
         <div class="pain-title">Дни рождения упущены</div>
-        <div class="pain-desc">Самый эмоциональный момент года — а парк молчит. Семья уходит туда, где её помнят.</div>
+        <div class="pain-desc">Самый эмоциональный момент года — а парк молчит. Семья идёт туда, где её помнят.</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="divider"></div>
-
 <!-- FEATURES -->
-<div class="light-section" id="features">
-  <div class="sec-max">
-    <div class="sec-tag reveal">Решение</div>
-    <h2 class="sec-title reveal">Всё в одном — для гостя и для команды</h2>
-    <p class="sec-sub reveal">StarPass закрывает задачи сразу трёх сторон: гость, кассир, директор — каждый видит только своё.</p>
+<div style="height:1px;background:rgba(0,0,0,0.07)"></div>
+<div class="ls" id="features">
+  <div class="wrap">
+    <div class="stag rv">Возможности</div>
+    <h2 class="stit rv">Всё в одном — для гостя и для команды</h2>
+    <p class="ssub rv">Каждый видит только своё. Гость — карту и бонусы. Кассир — поиск и начисление. Директор — аналитику и управление.</p>
     <div class="feat-grid">
-      <div class="feat-card hl reveal" style="transition-delay:0.05s">
+      <div class="feat-card hl rv" style="transition-delay:0.05s">
         <div class="feat-head">
           <div class="feat-ico" style="background:rgba(255,60,172,0.1)">⭐</div>
-          <div>
-            <div class="feat-role-lbl" style="color:#e0006e">ГОСТЬ</div>
-            <div class="feat-role-name">Карта лояльности</div>
-          </div>
+          <div><div class="feat-rlbl" style="color:#e0006e">ГОСТЬ</div>
+          <div class="feat-rname">Карта лояльности</div></div>
         </div>
         <div class="feat-list">
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Баланс и уровень в одном экране</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>QR-код вместо бумажной карты</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>История всех начислений</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>4 уровня: Новичок → Галактика</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Дни рождения детей — ×3★ бонус</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Акции и объявления прямо в карте</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Баланс звёзд и уровень на одном экране</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>QR-код вместо бумажной карты</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>История всех начислений и списаний</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>4 уровня: Новичок → Галактика</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Дни рождения детей — ×3★ бонус</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Акции и объявления прямо в карте</div>
         </div>
       </div>
-      <div class="feat-card reveal" style="transition-delay:0.1s">
+      <div class="feat-card rv" style="transition-delay:0.1s">
         <div class="feat-head">
           <div class="feat-ico" style="background:rgba(26,125,232,0.1)">🟢</div>
-          <div>
-            <div class="feat-role-lbl" style="color:#1a7de8">КАССИР</div>
-            <div class="feat-role-name">Быстрое начисление</div>
-          </div>
+          <div><div class="feat-rlbl" style="color:#1a7de8">КАССИР</div>
+          <div class="feat-rname">Быстрое начисление</div></div>
         </div>
         <div class="feat-list">
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Поиск по имени или телефону</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Один тап — +100★ за визит</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Регистрация нового гостя прямо здесь</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Приветствие нового гостя на экране</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Имя кассира в каждой записи</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Поиск по имени или телефону</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Один тап — +100★ за визит</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Регистрация нового гостя прямо здесь</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Приветствие нового гостя на экране</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Имя кассира в каждой записи истории</div>
         </div>
       </div>
-      <div class="feat-card reveal" style="transition-delay:0.15s">
+      <div class="feat-card rv" style="transition-delay:0.15s">
         <div class="feat-head">
           <div class="feat-ico" style="background:rgba(124,58,237,0.1)">🟣</div>
-          <div>
-            <div class="feat-role-lbl" style="color:#7c3aed">МЕНЕДЖЕР</div>
-            <div class="feat-role-name">Работа с гостями</div>
-          </div>
+          <div><div class="feat-rlbl" style="color:#7c3aed">МЕНЕДЖЕР</div>
+          <div class="feat-rname">Работа с гостями</div></div>
         </div>
         <div class="feat-list">
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Всё что может кассир</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Заявки на праздники и дни рождения</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Бонус ×3★ в ДР ребёнка</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Списание звёзд за приз или визит</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Применение акций</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Все функции кассира</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Входящие заявки на праздники</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Бонус ×3★ в день рождения ребёнка</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Списание звёзд за приз или визит</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Применение временных акций</div>
         </div>
       </div>
-      <div class="feat-card reveal" style="transition-delay:0.2s">
+      <div class="feat-card rv" style="transition-delay:0.2s">
         <div class="feat-head">
           <div class="feat-ico" style="background:rgba(224,0,110,0.1)">🔴</div>
-          <div>
-            <div class="feat-role-lbl" style="color:#e0006e">ДИРЕКТОР</div>
-            <div class="feat-role-name">Полный контроль</div>
-          </div>
+          <div><div class="feat-rlbl" style="color:#e0006e">ДИРЕКТОР</div>
+          <div class="feat-rname">Полный контроль</div></div>
         </div>
         <div class="feat-list">
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Дашборд: гости, визиты, звёзды</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Топ-3 самых активных гостя</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Полная история операций</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Управление акциями и объявлениями</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Настройка паролей сотрудников</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Дашборд: гости, визиты, звёзды</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Топ-3 самых активных гостя</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Полная история операций</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Управление акциями и объявлениями</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Настройка условий и паролей</div>
         </div>
       </div>
-      <div class="feat-card reveal" style="transition-delay:0.25s">
+      <div class="feat-card rv" style="transition-delay:0.25s">
         <div class="feat-head">
           <div class="feat-ico" style="background:rgba(6,214,160,0.1)">🔌</div>
-          <div>
-            <div class="feat-role-lbl" style="color:#059669">ИНТЕГРАЦИЯ</div>
-            <div class="feat-role-name">Кассы и системы</div>
-          </div>
+          <div><div class="feat-rlbl" style="color:#059669">ИНТЕГРАЦИЯ</div>
+          <div class="feat-rname">Кассы и системы</div></div>
         </div>
         <div class="feat-list">
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Работает на любом телефоне или планшете — без привязки к кассе</div>
-          <div class="feat-item"><span class="feat-check" style="color:#059669">✓</span>Открытый API — возможно подключение к существующим системам</div>
-          <div class="feat-item"><span class="feat-check" style="color:#8090b0">~</span><span style="color:#8090b0">Совместимость с 1С, IIKO, R-Keeper и другими — обсуждается индивидуально</span></div>
-          <div class="feat-item"><span class="feat-check" style="color:#8090b0">~</span><span style="color:#8090b0">Экспорт данных о гостях и визитах по запросу</span></div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Работает на любом телефоне или планшете</div>
+          <div class="feat-item"><span class="fc" style="color:#059669">✓</span>Без привязки к кассовой программе</div>
+          <div class="feat-item"><span class="fc" style="color:var(--muted)">~</span><span style="color:var(--muted)">Совместимость с 1С, IIKO, R-Keeper — обсуждается индивидуально</span></div>
+          <div class="feat-item"><span class="fc" style="color:var(--muted)">~</span><span style="color:var(--muted)">Экспорт данных о гостях и визитах по запросу</span></div>
         </div>
-        <div style="margin-top:14px;padding:10px 12px;background:rgba(6,214,160,0.06);border:1px solid rgba(6,214,160,0.15);border-radius:10px;font-size:0.76rem;color:#5a8a7a;line-height:1.5">
-          ~ Позиции со значком «~» реализуются под задачи конкретного клиента и уточняются при обсуждении
-        </div>
+        <div class="feat-note">~ Возможности со значком «~» реализуются под задачи конкретного клиента</div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- ROLES DEMO -->
-<div class="dark-section" id="roles">
-  <div class="sec-max">
-    <div class="sec-tag reveal">Попробуйте прямо сейчас</div>
-    <h2 class="sec-title reveal" style="color:#eef2ff">Войдите в любую роль</h2>
-    <p class="sec-sub reveal" style="color:rgba(255,255,255,0.45)">Всё работает без регистрации. Введите пароль и посмотрите изнутри.</p>
+<div class="ds" id="roles">
+  <div class="wrap">
+    <div class="stag dk rv">Попробуйте прямо сейчас</div>
+    <h2 class="stit dk rv">Войдите в любую роль</h2>
+    <p class="ssub dk rv">Всё работает без регистрации — введите пароль и посмотрите изнутри.</p>
     <div class="roles-grid">
-      <div class="role-card reveal" style="transition-delay:0.05s" onclick="window.location='demo-admin.html'">
-        <span class="rc-icon">🟢</span>
-        <div class="rc-badge" style="color:#2d9cff;border-color:rgba(45,156,255,0.3);background:rgba(45,156,255,0.08)">КАССИР</div>
-        <div class="rc-name">Начисление визитов</div>
-        <div class="rc-desc">Поиск гостя, +100★ за посещение, регистрация новичков</div>
-        <div class="rc-pass-wrap">
-          <span class="rc-pass-lbl">Пароль</span>
-          <span class="rc-pass" style="color:#2d9cff">1111</span>
-        </div>
+      <div class="role-card rv" style="transition-delay:0.05s" onclick="location='demo-admin.html'">
+        <span class="role-ico">🟢</span>
+        <div class="role-badge" style="color:#2d9cff;border-color:rgba(45,156,255,0.25);background:rgba(45,156,255,0.07)">КАССИР</div>
+        <div class="role-name">Начисление визитов</div>
+        <div class="role-desc">Поиск гостя, +100★ за посещение, регистрация новых гостей</div>
+        <div class="role-pass"><span class="rp-lbl">Пароль</span><span class="rp-val" style="color:#2d9cff">1111</span></div>
       </div>
-      <div class="role-card reveal" style="transition-delay:0.1s;border-color:rgba(155,89,255,0.2)" onclick="window.location='demo-admin.html'">
-        <span class="rc-icon">🟣</span>
-        <div class="rc-badge" style="color:#9b59ff;border-color:rgba(155,89,255,0.3);background:rgba(155,89,255,0.08)">МЕНЕДЖЕР</div>
-        <div class="rc-name">Управление гостями</div>
-        <div class="rc-desc">Кассир + заявки на праздники, ×3★ ДР, списание баллов</div>
-        <div class="rc-pass-wrap">
-          <span class="rc-pass-lbl">Пароль</span>
-          <span class="rc-pass" style="color:#9b59ff">2222</span>
-        </div>
+      <div class="role-card rv" style="transition-delay:0.1s;border-color:rgba(155,89,255,0.15)" onclick="location='demo-admin.html'">
+        <span class="role-ico">🟣</span>
+        <div class="role-badge" style="color:#9b59ff;border-color:rgba(155,89,255,0.25);background:rgba(155,89,255,0.07)">МЕНЕДЖЕР</div>
+        <div class="role-name">Управление гостями</div>
+        <div class="role-desc">Кассир + заявки на праздники, ×3★ ДР-бонус, списание баллов</div>
+        <div class="role-pass"><span class="rp-lbl">Пароль</span><span class="rp-val" style="color:#9b59ff">2222</span></div>
       </div>
-      <div class="role-card reveal" style="transition-delay:0.15s;border-color:rgba(255,60,172,0.2)" onclick="window.location='demo-admin.html'">
-        <span class="rc-icon">🔴</span>
-        <div class="rc-badge" style="color:#ff3cac;border-color:rgba(255,60,172,0.3);background:rgba(255,60,172,0.08)">ДИРЕКТОР</div>
-        <div class="rc-name">Полный доступ</div>
-        <div class="rc-desc">Дашборд, история, акции, объявления, пароли сотрудников</div>
-        <div class="rc-pass-wrap">
-          <span class="rc-pass-lbl">Пароль</span>
-          <span class="rc-pass" style="color:#ff3cac">3333</span>
-        </div>
+      <div class="role-card rv" style="transition-delay:0.15s;border-color:rgba(255,60,172,0.15)" onclick="location='demo-admin.html'">
+        <span class="role-ico">🔴</span>
+        <div class="role-badge" style="color:#ff3cac;border-color:rgba(255,60,172,0.25);background:rgba(255,60,172,0.07)">ДИРЕКТОР</div>
+        <div class="role-name">Полный доступ</div>
+        <div class="role-desc">Дашборд, история, акции, объявления, настройки и пароли</div>
+        <div class="role-pass"><span class="rp-lbl">Пароль</span><span class="rp-val" style="color:#ff3cac">3333</span></div>
       </div>
     </div>
-    <div class="cta-strip reveal">
-      <div class="cta-strip-title">Готовы увидеть систему в деле?</div>
-      <div class="cta-strip-sub">Все данные настоящие — демо работает как боевая система</div>
-      <div class="cta-strip-btns">
-        <a href="demo-loyalty.html" class="btn-big btn-s">⭐ Карта гостя</a>
-        <a href="demo-admin.html" class="btn-big btn-p">⚙️ Открыть панель</a>
+    <div class="cta-strip rv">
+      <h3>Готовы увидеть систему в деле?</h3>
+      <p>Все данные настоящие — демо работает как боевая система</p>
+      <div class="cta-btns">
+        <a href="demo-loyalty.html" class="btn btn-s">⭐ Карта гостя</a>
+        <a href="demo-admin.html" class="btn btn-p">⚙️ Открыть панель</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="ls" id="faq">
+  <div class="wrap">
+    <div class="stag rv">FAQ</div>
+    <h2 class="stit rv">Вопросы владельцев парков</h2>
+    <p class="ssub rv">Отвечаем на то, что обычно спрашивают перед принятием решения.</p>
+    <div class="faq-list rv">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Нужно ли гостям скачивать приложение?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Нет. Гость открывает обычную ссылку в браузере — и карта уже в телефоне. Никакого App Store, никаких скачиваний и паролей. Это и есть главное преимущество — порог входа для гостя минимален.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Сколько времени займёт внедрение?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Настройка под ваш парк занимает от 1 до 3 рабочих дней. Это включает адаптацию бренда (название, цвета, логотип), настройку условий программы (сколько звёзд за визит, пороги уровней) и обучение сотрудников. Кассир осваивает панель за 15 минут.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Будет ли система работать с нашей кассой?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Система работает независимо от кассы — кассир открывает панель на любом телефоне или планшете рядом с рабочим местом. Интеграция с 1С, IIKO, R-Keeper и другими системами возможна и обсуждается индивидуально — это отдельная задача под ваши конкретные процессы.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Где хранятся данные гостей? Это безопасно?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Данные хранятся в защищённой облачной базе данных (Supabase) с шифрованием. Доступ к панели управления — только по паролю. У каждой роли свой отдельный пароль. Данные принадлежат вам — в любой момент можно получить полный экспорт.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Что если у гостя нет смартфона или он не в интернете?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Кассир может найти гостя по имени или телефону прямо из панели и начислить звёзды вручную — без участия самого гостя. Так что смартфон нужен только если гость хочет видеть свою карту и историю.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Можно ли настроить условия лояльности под наш парк?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Да, полностью. Директор настраивает всё прямо из панели: количество звёзд за визит, множитель бонуса в день рождения, пороги уровней, условия обмена звёзд на призы. Менять можно в любой момент без участия разработчика.</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Сколько это стоит?
+          <span class="faq-arrow">▼</span>
+        </button>
+        <div class="faq-a"><div class="faq-a-inner">Стоимость обсуждается индивидуально с Александром — зависит от масштаба парка и нужных доработок. Свяжитесь с ним напрямую — он расскажет детали и ответит на все вопросы.</div></div>
       </div>
     </div>
   </div>
 </div>
 
 <!-- CONTACTS -->
-<div class="light-section" id="contacts">
-  <div class="sec-max">
-    <div class="sec-tag reveal">Хотите такую систему?</div>
-    <h2 class="sec-title reveal">Настроим под ваш парк</h2>
-    <p class="sec-sub reveal">Адаптируем бренд, цвета, подключим реальную базу данных, обучим сотрудников.</p>
+<div style="height:1px;background:rgba(0,0,0,0.07)"></div>
+<div class="ls" id="contacts">
+  <div class="wrap">
+    <div class="stag rv">Хотите такую систему?</div>
+    <h2 class="stit rv">Настроим под ваш парк</h2>
+    <p class="ssub rv">Адаптируем бренд и цвета, подключим реальную базу данных, обучим сотрудников.</p>
     <div class="contacts-grid">
-      <div class="contact-card reveal" style="transition-delay:0.05s">
+      <div class="cc rv" style="transition-delay:0.05s">
         <div class="cc-role">Партнёр · продажи и подключение</div>
         <div class="cc-name">Александр</div>
-        <div class="cc-title">По вопросам стоимости, демонстрации и внедрения — пишите Александру</div>
+        <div class="cc-sub">По вопросам стоимости, демонстрации и внедрения — пишите Александру</div>
         <div class="cc-links">
-          <a href="tel:+79220162952" class="cc-link"><span class="cc-link-ico">📞</span>+7 (922) 016-29-52</a>
+          <a href="tel:+79220162952" class="cc-link"><span>📞</span>+7 (922) 016-29-52</a>
         </div>
       </div>
-      <div class="contact-card reveal" style="transition-delay:0.1s">
+      <div class="cc rv" style="transition-delay:0.1s">
         <div class="cc-role">Разработчик · техническая часть</div>
         <div class="cc-name">Даниил Низамов</div>
-        <div class="cc-title">Разработка, интеграция, кастомизация под ваш бренд</div>
+        <div class="cc-sub">Разработка, интеграция, кастомизация под ваш бренд</div>
         <div class="cc-links">
-          <a href="https://nizamov-tech.ru" target="_blank" class="cc-link"><span class="cc-link-ico">🌐</span>nizamov-tech.ru</a>
-          <a href="https://t.me/Aslyamov74" target="_blank" class="cc-link"><span class="cc-link-ico">✈️</span>@Aslyamov74</a>
-          <a href="https://t.me/Daniil_s_zavoda" target="_blank" class="cc-link"><span class="cc-link-ico">📣</span>Путь с завода в IT</a>
+          <a href="https://nizamov-tech.ru" target="_blank" class="cc-link"><span>🌐</span>nizamov-tech.ru</a>
+          <a href="https://t.me/Aslyamov74" target="_blank" class="cc-link"><span>✈️</span>@Aslyamov74</a>
+          <a href="https://t.me/Daniil_s_zavoda" target="_blank" class="cc-link"><span>📣</span>Путь с завода в IT</a>
         </div>
       </div>
     </div>
@@ -679,173 +819,203 @@ footer a:hover{color:#fff}
   <p>© 2026 StarPass &nbsp;·&nbsp; Разработка: <a href="https://nizamov-tech.ru">nizamov-tech.ru</a> &nbsp;·&nbsp; Партнёр: Александр</p>
 </footer>
 
+<a href="demo-admin.html" class="mob-cta">⚙️ Открыть панель</a>
+
 <script>
-// ── NAV scroll ────────────────────────────────────────────────────────────────
+// NAV
 window.addEventListener('scroll',()=>{
-  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40);
+  document.getElementById('nav').classList.toggle('sc',scrollY>50);
 },{passive:true});
 
-// ── CANVAS STARS ──────────────────────────────────────────────────────────────
-(function(){
-  const c=document.getElementById('starCanvas');
-  const ctx=c.getContext('2d');
-  let W,H,particles=[];
-  function resize(){
-    W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;
-  }
-  window.addEventListener('resize',resize,{passive:true});
-  resize();
-
-  class Star{
+// CANVAS STARS
+(()=>{
+  const c=document.getElementById('starCanvas'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  const resize=()=>{W=c.width=c.offsetWidth;H=c.height=c.offsetHeight;};
+  window.addEventListener('resize',resize,{passive:true});resize();
+  class P{
+    reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+5;
+      this.r=Math.random()*1.2+0.2;this.s=Math.random()*0.3+0.08;
+      this.o=Math.random()*0.45+0.08;this.t=Math.random()*Math.PI*2;}
     constructor(){this.reset(true);}
-    reset(init){
-      this.x=Math.random()*W;
-      this.y=init?Math.random()*H:H+10;
-      this.size=Math.random()*1.5+0.3;
-      this.speed=Math.random()*0.4+0.1;
-      this.opacity=Math.random()*0.5+0.1;
-      this.twinkle=Math.random()*Math.PI*2;
-    }
-    update(){
-      this.y-=this.speed;
-      this.twinkle+=0.02;
-      if(this.y<-10) this.reset(false);
-    }
-    draw(){
-      ctx.save();
-      ctx.globalAlpha=this.opacity*(0.7+0.3*Math.sin(this.twinkle));
-      ctx.fillStyle='#fff';
-      ctx.beginPath();
-      ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-    }
+    tick(){this.y-=this.s;this.t+=0.018;if(this.y<-5)this.reset(false);}
+    draw(){ctx.save();ctx.globalAlpha=this.o*(0.7+0.3*Math.sin(this.t));
+      ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);
+      ctx.fill();ctx.restore();}
   }
-  for(let i=0;i<120;i++) particles.push(new Star());
-
-  function loop(){
-    ctx.clearRect(0,0,W,H);
-    particles.forEach(p=>{p.update();p.draw();});
-    requestAnimationFrame(loop);
-  }
+  for(let i=0;i<100;i++)pts.push(new P());
+  const loop=()=>{ctx.clearRect(0,0,W,H);pts.forEach(p=>{p.tick();p.draw();});requestAnimationFrame(loop);};
   loop();
 })();
 
-// ── PHONE ANIMATION — начисление звёзд ────────────────────────────────────────
-(function(){
-  let stars=250, visits=4, animating=false;
-  const SEQUENCES=[
-    {delay:2000, pts:100, label:'+100★', action:'Визит в парк', staff:'Ольга'},
-    {delay:3500, pts:100, label:'+100★', action:'Визит в парк', staff:'Анна'},
-    {delay:3500, pts:300, label:'+300★', action:'Бонус ДР × Маша 🎂', staff:'Менеджер'},
-    {delay:3000, pts:100, label:'+100★', action:'Визит в парк', staff:'Ольга'},
-  ];
+// HERO COUNTERS
+(()=>{
+  const targets=[4,3,10];
+  const ids=['n1','n2','n3'];
+  setTimeout(()=>{
+    ids.forEach((id,i)=>{
+      const el=document.getElementById(id);
+      let j=0;const t=targets[i];
+      const ti=setInterval(()=>{j++;el.textContent=Math.round(t*j/20);if(j>=20){el.textContent=t;clearInterval(ti);}},40);
+    });
+  },500);
+})();
 
-  function updatePhone(newStars, newVis, badge, label, action, staff){
-    const starsEl=document.getElementById('phoneStars');
-    const barEl=document.getElementById('phoneBar');
-    const subEl=document.getElementById('phoneSub');
-    const badgeEl=document.getElementById('phoneBadge');
-    const visEl=document.getElementById('phoneVis');
-    const histEl=document.getElementById('phoneHist');
-
-    // показываем бейдж
-    badgeEl.textContent=label;
-    badgeEl.style.display='inline-flex';
-    setTimeout(()=>badgeEl.style.display='none',1800);
-
-    // счётчик
-    const from=parseInt(starsEl.textContent)||stars;
-    const diff=newStars-from;
-    const steps=20;
-    let i=0;
-    const ti=setInterval(()=>{
-      i++;
-      starsEl.textContent=Math.round(from+diff*(i/steps));
-      if(i>=steps){starsEl.textContent=newStars;clearInterval(ti);}
-    },40);
-
-    // прогресс-бар (до 500)
-    const pct=Math.min(100,newStars/500*100);
-    barEl.style.width=pct+'%';
-
-    // подпись
-    const left=500-newStars;
-    subEl.textContent=left>0?`ещё ${left}★ до уровня Космонавт`:'🚀 Уровень Космонавт!';
-
-    // визиты
-    visEl.textContent=newVis;
-
-    // история — добавляем запись наверх
-    const now=new Date();
-    const dateStr=`${now.getDate()} ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'][now.getMonth()]} ${now.getFullYear()}`;
-    const hi=document.createElement('div');
-    hi.className='p-hi';
-    hi.style.cssText='animation:hiIn 0.35s ease;opacity:0';
-    hi.innerHTML=`<div class="p-hi-ico p">⭐</div>
-      <div class="p-hi-info">
-        <div class="p-hi-action">${action}</div>
-        <div class="p-hi-date">${dateStr} · ${staff}</div>
-      </div>
-      <div class="p-hi-pts p">${label}</div>`;
-    histEl.insertBefore(hi,histEl.firstChild);
-    setTimeout(()=>hi.style.opacity='1',10);
-    if(histEl.children.length>4) histEl.removeChild(histEl.lastChild);
+// PHONE ROLE SWITCHER
+const ROLES={
+  guest:{
+    glow:'rgba(155,89,255,0.25)',
+    badge:'rgb(155,89,255)',
+    title:'Карта лояльности гостя',
+    sub:'Баланс, история, QR-код, уровни и бонусы — всё на одном экране',
+    fb1:'🎉 +100★ Визит начислен!',
+    fb2:'🎂 ×3 ДР-бонус<br><span style="color:var(--green);font-size:0.62rem">+300★ начислено</span>',
+    fb3:'🏆 Уровень повышен!<br><span style="color:var(--yellow);font-size:0.62rem">Космонавт 🚀</span>',
+  },
+  cashier:{
+    glow:'rgba(45,156,255,0.22)',
+    badge:'rgb(45,156,255)',
+    title:'Панель кассира',
+    sub:'Поиск гостя за секунду — один тап и звёзды начислены',
+    fb1:'🔍 Иванов найден',
+    fb2:'✅ +100★ начислено<br><span style="color:var(--green);font-size:0.62rem">Визит в парк</span>',
+    fb3:'🎉 Новый гость<br><span style="color:var(--blue);font-size:0.62rem">Зарегистрирован!</span>',
+  },
+  director:{
+    glow:'rgba(255,60,172,0.22)',
+    badge:'rgb(255,60,172)',
+    title:'Панель директора',
+    sub:'Статистика, аналитика, акции и объявления — полный контроль',
+    fb1:'📊 Визитов сегодня: 12',
+    fb2:'📢 Объявление опубликовано<br><span style="color:var(--neon);font-size:0.62rem">Гости уже видят</span>',
+    fb3:'👑 Топ гость сегодня<br><span style="color:var(--yellow);font-size:0.62rem">Иванов Иван 350★</span>',
   }
+};
 
-  function runSequence(idx){
-    if(idx>=SEQUENCES.length){
-      // сброс до начального состояния и повтор
-      stars=250; visits=4;
-      document.getElementById('phoneStars').textContent=stars;
-      document.getElementById('phoneVis').textContent=visits;
-      document.getElementById('phoneBar').style.width='50%';
-      document.getElementById('phoneSub').textContent='ещё 250★ до уровня Космонавт';
-      setTimeout(()=>runSequence(0),2000);
+let cur='guest';
+function switchRole(role){
+  if(cur===role) return;
+  // убираем старый
+  document.getElementById('screen-'+cur).classList.remove('on');
+  document.getElementById('screen-'+cur).classList.add('out');
+  document.querySelector('.rs-btn.'+cur).classList.remove('on');
+  setTimeout(()=>document.getElementById('screen-'+cur).classList.remove('out'),380);
+  cur=role;
+  // включаем новый
+  document.getElementById('screen-'+role).classList.add('on');
+  document.querySelector('.rs-btn.'+role).classList.add('on');
+  // glow
+  document.getElementById('phoneGlow').style.background=
+    `radial-gradient(ellipse,${ROLES[role].glow},transparent 70%)`;
+  // desc
+  document.getElementById('rdTitle').textContent=ROLES[role].title;
+  document.getElementById('rdSub').textContent=ROLES[role].sub;
+  // badges
+  document.getElementById('fb1').innerHTML=ROLES[role].fb1;
+  document.getElementById('fb2').innerHTML=ROLES[role].fb2;
+  document.getElementById('fb3').innerHTML=ROLES[role].fb3;
+}
+
+// КАССИР: анимация нажатия
+let cashStars=350,cashVis=4,cashAnimating=false;
+function doCashier(){
+  if(cashAnimating) return;
+  cashAnimating=true;
+  const btn=document.getElementById('cashBtn');
+  btn.textContent='✅ +100★ начислено!';
+  btn.style.background='linear-gradient(135deg,#9b59ff,#6b2fff)';
+  setTimeout(()=>{
+    btn.textContent='+ 100★ Визит';
+    btn.style.background='';
+    cashAnimating=false;
+  },2000);
+}
+
+// ГОСТЬ: автоанимация начисления
+(()=>{
+  let stars=350,vis=4;
+  const seqs=[
+    {pts:100,label:'+100★',action:'Визит в парк',staff:'Ольга',delay:3000},
+    {pts:100,label:'+100★',action:'Визит в парк',staff:'Анна',delay:3500},
+    {pts:300,label:'+300★',action:'Бонус ДР × Маша 🎂',staff:'Менеджер',delay:3000},
+  ];
+  function run(idx){
+    if(idx>=seqs.length){
+      // ресет
+      stars=350;vis=4;
+      document.getElementById('gs').textContent=stars;
+      document.getElementById('gv').textContent=vis;
+      document.getElementById('gbar').style.width='70%';
+      document.getElementById('gsub').textContent='ещё 150★ до Космонавта';
+      setTimeout(()=>run(0),2500);
       return;
     }
-    const seq=SEQUENCES[idx];
+    const s=seqs[idx];
     setTimeout(()=>{
-      stars+=seq.pts;
-      visits+=1;
-      updatePhone(stars,visits,true,seq.label,seq.action,seq.staff);
-      setTimeout(()=>runSequence(idx+1),seq.delay);
-    },seq.delay);
+      // только если экран гостя активен — иначе тихо обновляем
+      stars+=s.pts;vis+=1;
+      const gsEl=document.getElementById('gs');
+      const gbEl=document.getElementById('gb');
+      const gbarEl=document.getElementById('gbar');
+      const gsubEl=document.getElementById('gsub');
+      const gvEl=document.getElementById('gv');
+      // бейдж
+      gbEl.textContent=s.label;gbEl.style.display='inline';
+      setTimeout(()=>gbEl.style.display='none',1800);
+      // счётчик
+      const from=parseInt(gsEl.textContent)||stars-s.pts;
+      let i=0;
+      const ti=setInterval(()=>{i++;gsEl.textContent=Math.round(from+s.pts*i/20);
+        if(i>=20){gsEl.textContent=stars;clearInterval(ti);}},35);
+      // бар (до 500)
+      gbarEl.style.width=Math.min(100,stars/500*100)+'%';
+      const left=500-stars;
+      gsubEl.textContent=left>0?`ещё ${left}★ до Космонавта`:'🚀 Уровень Космонавт!';
+      gvEl.textContent=vis;
+      // история
+      const hist=document.getElementById('ghist');
+      const hi=document.createElement('div');
+      hi.className='pm-hi';
+      hi.style.opacity='0';hi.style.transition='opacity 0.3s';
+      hi.innerHTML=`<div class="pm-hi-ico p">⭐</div>
+        <div class="pm-hi-info"><div class="pm-hi-a">${s.action}</div>
+        <div class="pm-hi-d">сейчас · ${s.staff}</div></div>
+        <div class="pm-hi-p p">${s.label}</div>`;
+      hist.insertBefore(hi,hist.firstChild);
+      setTimeout(()=>hi.style.opacity='1',10);
+      if(hist.children.length>3)hist.removeChild(hist.lastChild);
+      run(idx+1);
+    },s.delay);
   }
-
-  // старт после небольшой паузы
-  setTimeout(()=>runSequence(0),2500);
+  setTimeout(()=>run(0),3000);
 })();
 
-// ── HERO STATS счётчики ───────────────────────────────────────────────────────
-(function(){
-  function animNum(id,target,dur){
-    const el=document.getElementById(id);
-    const steps=30;
-    let i=0;
-    const ti=setInterval(()=>{
-      i++;
-      el.textContent=Math.round(target*(i/steps));
-      if(i>=steps){el.textContent=target;clearInterval(ti);}
-    },dur/steps);
-  }
-  setTimeout(()=>{
-    animNum('statVis',4,800);
-    animNum('statStars',350,1000);
-  },600);
-})();
+// FAQ
+function toggleFaq(btn){
+  const item=btn.closest('.faq-item');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'));
+  if(!isOpen) item.classList.add('open');
+}
 
-// ── SCROLL REVEAL ─────────────────────────────────────────────────────────────
-(function(){
-  const obs=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
-  },{threshold:0.12});
-  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
-})();
+// SCROLL REVEAL
+new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:0.1}).observe=function(el){
+  IntersectionObserver.prototype.observe.call(this,el);
+};
+const obs=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on');});
+},{threshold:0.1});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+// smooth anchor scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth'});}
+  });
+});
 </script>
-
-<style>
-@keyframes hiIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
-</style>
 </body>
 </html>
