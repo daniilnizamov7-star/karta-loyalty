@@ -95,30 +95,113 @@ nav.sc{background:rgba(4,5,14,0.96);backdrop-filter:blur(20px);
 .rs-btn.cashier.on{background:linear-gradient(135deg,#1a7de8,#0d5bbf)}
 .rs-btn.director.on{background:linear-gradient(135deg,#ff3cac,#c4007a)}
 
-/* телефон */
-.phone-frame{width:240px;position:relative;
-  filter:drop-shadow(0 40px 80px rgba(0,0,0,0.7))}
-.phone-body{background:linear-gradient(160deg,#1c1828,#0a0814);
-  border:1.5px solid rgba(255,255,255,0.1);border-radius:36px;
-  overflow:hidden;height:490px;position:relative;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,0.07)}
-.phone-notch{width:54px;height:5px;background:rgba(255,255,255,0.07);
-  border-radius:100px;margin:10px auto 8px}
+/* ── РЕАЛИСТИЧНЫЙ IPHONE ── */
+.phone-frame{width:260px;position:relative}
 
-/* экраны */
-.pscreen{position:absolute;inset:0;padding:10px 10px 12px;
+/* тень и свечение */
+.phone-shadow{position:absolute;bottom:-30px;left:50%;
+  transform:translateX(-50%);width:200px;height:30px;
+  background:radial-gradient(ellipse,rgba(0,0,0,0.5),transparent 70%);
+  filter:blur(10px);pointer-events:none;transition:all 0.3s}
+
+/* внешний корпус */
+.phone-outer{
+  position:relative;
+  width:260px;
+  height:530px;
+  background:linear-gradient(160deg,#2a2a2e 0%,#1c1c1e 40%,#2a2a2e 100%);
+  border-radius:46px;
+  padding:3px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.18),
+    0 0 0 2px rgba(0,0,0,0.8),
+    0 30px 80px rgba(0,0,0,0.8),
+    0 10px 30px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.5)}
+
+/* блик сбоку — имитация металла */
+.phone-outer::before{content:'';position:absolute;
+  top:10%;left:0;width:3px;height:40%;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,0.25),transparent);
+  border-radius:0 2px 2px 0}
+.phone-outer::after{content:'';position:absolute;
+  top:10%;right:0;width:3px;height:40%;
+  background:linear-gradient(180deg,transparent,rgba(255,255,255,0.12),transparent);
+  border-radius:2px 0 0 2px}
+
+/* кнопки боковые */
+.phone-btn-l{position:absolute;left:-3px;top:100px;
+  width:3px;height:34px;background:linear-gradient(180deg,#3a3a3c,#2a2a2e,#3a3a3c);
+  border-radius:2px 0 0 2px;
+  box-shadow:-1px 0 2px rgba(0,0,0,0.5),inset 1px 0 0 rgba(255,255,255,0.1)}
+.phone-btn-l2{position:absolute;left:-3px;top:145px;
+  width:3px;height:60px;background:linear-gradient(180deg,#3a3a3c,#2a2a2e,#3a3a3c);
+  border-radius:2px 0 0 2px;
+  box-shadow:-1px 0 2px rgba(0,0,0,0.5),inset 1px 0 0 rgba(255,255,255,0.1)}
+.phone-btn-l3{position:absolute;left:-3px;top:216px;
+  width:3px;height:60px;background:linear-gradient(180deg,#3a3a3c,#2a2a2e,#3a3a3c);
+  border-radius:2px 0 0 2px;
+  box-shadow:-1px 0 2px rgba(0,0,0,0.5),inset 1px 0 0 rgba(255,255,255,0.1)}
+.phone-btn-r{position:absolute;right:-3px;top:160px;
+  width:3px;height:80px;background:linear-gradient(180deg,#3a3a3c,#2a2a2e,#3a3a3c);
+  border-radius:0 2px 2px 0;
+  box-shadow:1px 0 2px rgba(0,0,0,0.5),inset -1px 0 0 rgba(255,255,255,0.1)}
+
+/* внутренний экран */
+.phone-screen{
+  background:#000;
+  border-radius:44px;
+  overflow:hidden;
+  position:relative;
+  height:100%;
+  max-height:100%;
   display:flex;flex-direction:column;
-  opacity:0;transform:translateX(18px);
-  transition:all 0.38s cubic-bezier(.22,1,.36,1);pointer-events:none}
+  box-shadow:inset 0 2px 4px rgba(255,255,255,0.06)}
+
+/* Dynamic Island */
+.dynamic-island{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:100px;height:30px;
+  background:#000;
+  border-radius:20px;
+  z-index:20;
+  box-shadow:0 0 0 1px rgba(255,255,255,0.04)}
+.di-camera{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#1a1a1a,#000);
+  box-shadow:0 0 0 1.5px rgba(255,255,255,0.06),
+    inset 0 0 3px rgba(100,180,255,0.15)}
+.di-dot{position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  width:4px;height:4px;border-radius:50%;
+  background:rgba(100,180,255,0.3)}
+
+/* бликовое стекло поверх экрана */
+.phone-glare{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:10;
+  background:linear-gradient(135deg,
+    rgba(255,255,255,0.07) 0%,
+    rgba(255,255,255,0.02) 30%,
+    transparent 60%);
+  border-radius:44px}
+
+/* экраны приложения */
+/* экраны — стек поверх друг друга через grid */
+.pscreens-wrap{display:grid;grid-template-columns:1fr;
+  padding-top:50px;flex:1;overflow:hidden;min-height:0;max-height:100%}
+.pscreen{grid-area:1/1;padding:0 8px 8px;
+  display:flex;flex-direction:column;
+  opacity:0;transform:translateX(16px);
+  transition:all 0.38s cubic-bezier(.22,1,.36,1);pointer-events:none;
+  overflow:hidden;max-height:100%}
 .pscreen.on{opacity:1;transform:none;pointer-events:all}
-.pscreen.out{opacity:0;transform:translateX(-18px)}
+.pscreen.out{opacity:0;transform:translateX(-16px)}
 
 /* общие мини-элементы */
 .ph{font-size:0.58rem;font-weight:900;
   background:linear-gradient(135deg,var(--neon),var(--blue));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  margin-bottom:6px;display:block}
-.pm-card{border-radius:13px;padding:11px;margin-bottom:6px}
+  margin-bottom:4px;display:block}
+.pm-card{border-radius:13px;padding:9px;margin-bottom:5px}
 .pm-lbl{font-size:0.38rem;text-transform:uppercase;letter-spacing:0.1em;
   color:rgba(255,255,255,0.3);margin-bottom:1px}
 .pm-val{font-family:var(--fh);font-weight:900;line-height:1}
@@ -127,27 +210,27 @@ nav.sc{background:rgba(4,5,14,0.96);backdrop-filter:blur(20px);
 .pm-fill{height:100%;border-radius:100px;
   background:linear-gradient(90deg,var(--neon),var(--blue))}
 .pm-row{display:flex;justify-content:space-between;
-  font-size:0.38rem;color:rgba(255,255,255,0.25);margin-bottom:8px}
+  font-size:0.38rem;color:rgba(255,255,255,0.25);margin-bottom:5px}
 .pm-bottom{display:flex;justify-content:space-between;align-items:flex-end}
 .pm-name{font-size:0.55rem;font-weight:700}
 .pm-vis{font-size:0.38rem;color:rgba(255,255,255,0.3);text-align:right}
 .pm-vis strong{display:block;font-size:0.7rem;font-weight:900;color:#eef2ff}
 
-.pm-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-bottom:6px}
+.pm-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:3px;margin-bottom:4px}
 .pm-act{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
   border-radius:8px;padding:6px 2px;text-align:center;font-size:0.7rem}
 .pm-act-l{font-size:0.35rem;color:rgba(255,255,255,0.28);margin-top:1px;font-weight:700}
 
 .pm-tabs{display:flex;background:rgba(255,255,255,0.04);
-  border-radius:7px;overflow:hidden;margin-bottom:6px}
+  border-radius:7px;overflow:hidden;margin-bottom:4px}
 .pm-tab{flex:1;padding:4px 2px;text-align:center;font-size:0.38rem;
   font-weight:700;color:rgba(255,255,255,0.28)}
 .pm-tab.on{background:rgba(255,60,172,0.1);color:var(--neon)}
 
-.pm-hist{display:flex;flex-direction:column;gap:4px}
+.pm-hist{display:flex;flex-direction:column;gap:3px;overflow:hidden;max-height:120px;flex-shrink:0}
 .pm-hi{display:flex;align-items:center;gap:5px;
   background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);
-  border-radius:7px;padding:5px 7px}
+  border-radius:7px;padding:4px 6px;flex-shrink:0}
 .pm-hi-ico{width:18px;height:18px;border-radius:50%;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;font-size:0.55rem}
 .pm-hi-ico.p{background:rgba(6,214,160,0.12)}
@@ -201,10 +284,10 @@ nav.sc{background:rgba(4,5,14,0.96);backdrop-filter:blur(20px);
 .fb{position:absolute;background:var(--card2);border:1px solid var(--bd2);
   border-radius:12px;padding:8px 12px;font-size:0.7rem;font-weight:700;
   box-shadow:0 8px 24px rgba(0,0,0,0.4);white-space:nowrap;pointer-events:none;
-  animation:fbfl 3s ease-in-out infinite}
-.fb1{left:-110px;top:80px;animation-delay:0s}
-.fb2{right:-100px;top:150px;animation-delay:1.2s}
-.fb3{left:-90px;bottom:120px;animation-delay:2.4s}
+  animation:fbfl 3s ease-in-out infinite;z-index:10}
+.fb1{left:-120px;top:100px;animation-delay:0s}
+.fb2{right:-115px;top:160px;animation-delay:1.2s}
+.fb3{left:-100px;bottom:100px;animation-delay:2.4s}
 @keyframes fbfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 
 /* ── LIGHT SECTIONS ── */
@@ -360,8 +443,11 @@ footer a:hover{color:#fff}
 @media(max-width:600px){
   .hero{padding:80px 20px 48px}
   .ls,.ds{padding:52px 20px}
-  .phone-frame{width:210px}
-  .phone-body{height:430px}
+  .phone-frame{width:220px}
+  .phone-outer{border-radius:38px;width:220px;height:450px}
+  .phone-screen{border-radius:36px}
+  .phone-glare{border-radius:36px}
+  .dynamic-island{width:84px;height:26px;top:10px}
   .hero-btns{flex-direction:column;width:100%}
   .btn{justify-content:center}
   .cta-strip{padding:28px 20px}
@@ -425,9 +511,23 @@ footer a:hover{color:#fff}
         <div class="fb fb2" id="fb2">🎂 ×3 ДР-бонус<br><span style="color:var(--green);font-size:0.62rem">+300★ начислено</span></div>
         <div class="fb fb3" id="fb3">📊 Визитов сегодня: 12</div>
 
-        <div class="phone-body">
-          <div class="phone-notch"></div>
+        <div class="phone-outer">
+          <!-- боковые кнопки -->
+          <div class="phone-btn-l"></div>
+          <div class="phone-btn-l2"></div>
+          <div class="phone-btn-l3"></div>
+          <div class="phone-btn-r"></div>
 
+          <div class="phone-screen">
+            <!-- Dynamic Island -->
+            <div class="dynamic-island">
+              <div class="di-camera"></div>
+              <div class="di-dot"></div>
+            </div>
+            <!-- стеклянный блик -->
+            <div class="phone-glare"></div>
+
+          <div class="pscreens-wrap">
           <!-- ЭКРАН: ГОСТЬ -->
           <div class="pscreen on" id="screen-guest">
             <span class="ph">⭐ STARPASS</span>
@@ -512,8 +612,10 @@ footer a:hover{color:#fff}
             </div>
           </div>
 
-        </div><!-- /phone-body -->
-        <div class="phone-glow" id="phoneGlow"></div>
+          </div><!-- /pscreens-wrap -->
+          </div><!-- /phone-screen -->
+        </div><!-- /phone-outer -->
+        <div class="phone-shadow" id="phoneGlow"></div>
       </div><!-- /phone-frame -->
 
       <!-- описание роли -->
@@ -907,6 +1009,7 @@ function switchRole(role){
   // glow
   document.getElementById('phoneGlow').style.background=
     `radial-gradient(ellipse,${ROLES[role].glow},transparent 70%)`;
+  document.getElementById('phoneGlow').style.filter='blur(12px)';
   // desc
   document.getElementById('rdTitle').textContent=ROLES[role].title;
   document.getElementById('rdSub').textContent=ROLES[role].sub;
